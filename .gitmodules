@@ -1,0 +1,3 @@
+[submodule "rosplata"]
+	path = rosplata
+	url = https://github.com/johnSamilin/rosplata
