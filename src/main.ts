@@ -8,12 +8,13 @@ import { AppModule } from './app.module';
 
 import express = require('express');
 import fs = require('fs');
+import { CONFIG } from './config';
 
 async function bootstrap() {
   const expressApp: Express = express();
   const spdyOpts: ServerOptions = {
-    key: fs.readFileSync('./test.key'),
-    cert: fs.readFileSync('./test.crt'),
+    key: fs.readFileSync(CONFIG.IS_DEV ? './test.key' : './privkey.pem'),
+    cert: fs.readFileSync(CONFIG.IS_DEV ? './test.crt' : './fullchain.pem'),
   };
   const server: Server = createServer(spdyOpts, expressApp);
 
