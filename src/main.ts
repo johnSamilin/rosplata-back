@@ -4,7 +4,6 @@ import { ExpressAdapter } from '@nestjs/platform-express/adapters';
 import { Express } from 'express';
 import { join } from 'path';
 import { Server, ServerOptions, createServer } from 'spdy';
-import * as compression from 'compression';
 import { AppModule } from './app.module';
 
 import express = require('express');
@@ -24,10 +23,8 @@ async function bootstrap() {
     new ExpressAdapter(expressApp),
   );
   app.useStaticAssets(join(__dirname, '..', 'rosplata'));
-  expressApp.use(compression());
 
   await app.init();
   await server.listen(process.env.PORT || 443);
-
 }
 bootstrap();
