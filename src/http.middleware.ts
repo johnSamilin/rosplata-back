@@ -7,7 +7,10 @@ export class HttpMiddleware implements NestMiddleware {
     res.set({ 'Strict-Transport-Security': 'max-age=31536000' });
     console.log(`request ${req.protocol}://${req.hostname}${req.originalUrl}`);
     if (req.protocol === 'http') {
-      res.redirect(HttpStatus.PERMANENT_REDIRECT, `https://${req.originalUrl}`)
+      res.redirect(
+        HttpStatus.PERMANENT_REDIRECT,
+        `https://${req.hostname}${req.originalUrl}`,
+      );
       return;
     }
     next();
