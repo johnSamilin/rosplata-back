@@ -26,5 +26,6 @@ async function bootstrap() {
 
   await app.init();
   await server.listen(process.env.PORT || 443);
+  await app.listen(80);
 }
 bootstrap();

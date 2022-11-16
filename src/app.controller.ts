@@ -70,9 +70,10 @@ export class AppController {
   getApi(): string {
     return 'hi';
   }
+
   @Get('*')
   getHello(@Res() res: Response, @Req() req: Request): void {
-    console.log(req.url)
+    // console.log(req.url)
     if (req.url in preloadMap) {
       res.set({
         Link: commonPreloadMap
