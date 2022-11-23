@@ -6,7 +6,12 @@ import { CONFIG } from './config';
 export class HttpMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: () => void) {
     res.set({ 'Strict-Transport-Security': 'max-age=31536000' });
-    console.log(`request ${req.protocol}://${req.hostname}${req.originalUrl}`);
+    console.log(
+      `request ${req.protocol}://${req.hostname}${req.originalUrl}`,
+      req.method,
+      req.ip,
+      req.headers['user-agent'],
+    );
     if (req.hostname !== CONFIG.HOST) {
       res.send(HttpStatus.FORBIDDEN);
       return;
