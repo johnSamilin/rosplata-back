@@ -22,6 +22,7 @@ const commonPreloadMap = [
   '/src/core/SettingsManager.mjs',
   '/src/App.mjs',
   '/src/core/LayoutManager.mjs',
+  '/src/core/RequestManager.mjs',
 ];
 
 const preloadMap = {
