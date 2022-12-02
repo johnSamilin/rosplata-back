@@ -38,3 +38,4 @@ lerna-debug.log*
 *.key
 *.pem
 src/config.ts
+db/config/config.json
