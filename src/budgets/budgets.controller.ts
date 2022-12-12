@@ -4,9 +4,11 @@ import {
   Get,
   HttpStatus,
   Param,
-  Post,
+  Put,
   Res,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import { BudgetsService } from './budgets.service';
 
@@ -24,14 +26,20 @@ export class BudgetsController {
     return await this.budgetsService.get(id);
   }
 
-  @Post('')
+  @Put('')
+  @UseInterceptors(FileInterceptor('body'))
   async create(@Body() body, @Res() res: Response) {
-    console.log({ body });
-
-    if (!body.name) {
+    if (
+      !body.name ||
+      body.name.length < 3 ||
+      body.name.length > 20 ||
+      /([^\w\d ]+)/gi.test(body.name)
+    ) {
       res.send(HttpStatus.BAD_REQUEST);
       return;
     }
-    return await this.budgetsService.create(body.name);
+    await this.budgetsService.create(body.name);
+
+    res.status(HttpStatus.CREATED).send({ created: true });
   }
 }
