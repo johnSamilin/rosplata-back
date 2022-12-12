@@ -1,0 +1,24 @@
+{
+  "development": {
+    "username": "mysql",
+    "password": "mysql",
+    "database": "rosplata",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "autoLoadModels": true,
+    "retryAttempts": 3,
+    "synchronize": true,
+    "logging": true
+  },
+  "production": {
+    "username": "mysql",
+    "password": "mysql",
+    "database": "rosplata",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "autoLoadModels": true,
+    "retryAttempts": 3,
+    "synchronize": true,
+    "logging": false
+  }
+}

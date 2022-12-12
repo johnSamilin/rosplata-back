@@ -22,6 +22,7 @@ const commonPreloadMap = [
   '/src/core/SettingsManager.mjs',
   '/src/App.mjs',
   '/src/core/LayoutManager.mjs',
+  '/src/core/RequestManager.mjs',
 ];
 
 const preloadMap = {
@@ -32,6 +33,16 @@ const preloadMap = {
     '/src/containers/BudgetList/BudgetList.css',
     '/src/containers/BudgetListItem/BudgetListItem.mjs',
     '/src/containers/BudgetListItem/BudgetListItem.css',
+  ],
+  '/create': [
+    '/src/layouts/Main/MainLayout.mjs',
+    '/src/layouts/Main/MainLayout.css',
+    '/src/containers/BudgetList/BudgetList.mjs',
+    '/src/containers/BudgetList/BudgetList.css',
+    '/src/containers/BudgetListItem/BudgetListItem.mjs',
+    '/src/containers/BudgetListItem/BudgetListItem.css',
+    '/src/containers/NewBudget/NewBudget.mjs',
+    '/src/containers/NewBudget/NewBudget.css',
   ],
   '/settings': [
     '/src/layouts/Settings/SettingsLayout.mjs',
