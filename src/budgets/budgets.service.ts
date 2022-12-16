@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Budgets } from 'src/models/Budgets';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class BudgetsService {
@@ -9,17 +10,33 @@ export class BudgetsService {
     private budgets: typeof Budgets,
   ) {}
 
-  async getAll() {
-    return this.budgets.findAll();
+  async getAll(userId: string) {
+    return this.budgets.findAll({
+      where: {
+        userId: {
+          [Op.eq]: userId,
+        },
+      }
+    });
   }
 
-  async get(id: string) {
-    return this.budgets.findByPk(id);
+  async get(id: string, userId: string) {
+    return this.budgets.findOne({
+      where: {
+        userId: {
+          [Op.eq]: userId,
+        },
+        id: {
+          [Op.eq]: id,
+        }
+      }
+    });
   }
 
-  async create(name) {
+  async create(name: string, userId: string) {
     return this.budgets.create({
       name,
+      userId,
     });
   }
 }

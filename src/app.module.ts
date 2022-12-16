@@ -9,6 +9,11 @@ import { BudgetsController } from './budgets/budgets.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Budgets } from './models/Budgets';
 import { BudgetsService } from './budgets/budgets.service';
+import { FirebaseAuthStrategy } from './users/firebase.strategy';
+import { UsersController } from './users/users.controller';
+import { UsersModule } from './users/users.module';
+import { Users } from './models/Users';
+import { UsersService } from './users/users.service';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const configs = require('../db/config/config.json');
@@ -21,11 +26,12 @@ const env = CONFIG.IS_DEV ? 'development' : 'production';
     SequelizeModule.forRoot(configs[env]),
     HttpMiddleware,
     EarlyHintsMiddleware,
-    SequelizeModule.forFeature([Budgets]),
+    SequelizeModule.forFeature([Budgets, Users]),
     BudgetsModule,
+    UsersModule,
   ],
-  controllers: [BudgetsController, AppController],
-  providers: [BudgetsService, AppService],
+  controllers: [BudgetsController, UsersController, AppController],
+  providers: [BudgetsService, UsersService, AppService, FirebaseAuthStrategy],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
