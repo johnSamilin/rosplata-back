@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Budgets } from 'src/models/Budgets';
+import { Budgets } from 'src/api/models/Budgets';
 import { Op } from 'sequelize';
 
 @Injectable()

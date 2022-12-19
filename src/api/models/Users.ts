@@ -1,10 +1,12 @@
 import { Column, Model, PrimaryKey, Table } from 'sequelize-typescript';
 
-@Table
+@Table({
+  tableName: 'users',
+})
 export class Users extends Model {
   @PrimaryKey
   @Column
-  id: number;
+  id: string;
 
   @Column
   name: string;

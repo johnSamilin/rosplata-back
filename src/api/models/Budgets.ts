@@ -8,7 +8,9 @@ import {
 } from 'sequelize-typescript';
 import { Users } from './Users';
 
-@Table
+@Table({
+  tableName: 'budgets'
+})
 export class Budgets extends Model {
   @PrimaryKey
   @AutoIncrement

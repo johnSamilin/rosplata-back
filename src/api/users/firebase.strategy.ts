@@ -4,12 +4,14 @@ import { Strategy, ExtractJwt } from 'passport-firebase-jwt';
 import * as firebase from 'firebase-admin';
 import { CONFIG } from 'src/config';
 
+// TODO: check for potential performance bottleneck (does it request smth from 3rd oparty?)
 @Injectable()
 export class FirebaseAuthStrategy extends PassportStrategy(
   Strategy,
   'firebase',
 ) {
   private defaultApp: any;
+
   constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -18,6 +20,7 @@ export class FirebaseAuthStrategy extends PassportStrategy(
       credential: firebase.credential.cert(CONFIG.FIREBASE),
     });
   }
+
   async validate(token: string) {
     const firebaseUser: any = await this.defaultApp
       .auth()
