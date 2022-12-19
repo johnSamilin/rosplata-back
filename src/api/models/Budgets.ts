@@ -1,12 +1,16 @@
 import {
   AutoIncrement,
   Column,
+  ForeignKey,
   Model,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
+import { Users } from './Users';
 
-@Table
+@Table({
+  tableName: 'budgets'
+})
 export class Budgets extends Model {
   @PrimaryKey
   @AutoIncrement
@@ -15,4 +19,8 @@ export class Budgets extends Model {
 
   @Column
   name: string;
+
+  @ForeignKey(() => Users)
+  @Column
+  userId: string;
 }
