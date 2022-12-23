@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
 import { Transactions } from '../models/Transactions';
+import { Users } from '../models/Users';
 
 @Injectable()
 export class TransactionsService {
@@ -17,6 +18,12 @@ export class TransactionsService {
           [Op.eq]: budgetId,
         },
       },
+      include: [
+        {
+          model: Users,
+          attributes: ['id', 'name', 'picture'],
+        },
+      ],
     });
   }
 

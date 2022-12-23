@@ -1,7 +1,9 @@
 import {
   AutoIncrement,
+  BelongsTo,
   Column,
   ForeignKey,
+  HasOne,
   Model,
   PrimaryKey,
   Table,
@@ -22,6 +24,9 @@ export class Transactions extends Model {
   @ForeignKey(() => Users)
   ownerId: string;
 
+  @BelongsTo(() => Users)
+  user: Users;
+
   @ForeignKey(() => Budgets)
   @Column
   budgetId: number;
@@ -30,8 +35,8 @@ export class Transactions extends Model {
   amount: number;
 
   @Column
-  createdAt?: string;
+  createdAt?: Date;
 
   @Column
-  updatedAt?: string;
+  updatedAt?: Date;
 }
