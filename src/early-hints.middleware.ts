@@ -23,6 +23,8 @@ const commonPreloadMap = [
   '/src/App.mjs',
   '/src/core/LayoutManager.mjs',
   '/src/core/RequestManager.mjs',
+  'https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js',
+  'https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js',
 ];
 
 const preloadMap = {
