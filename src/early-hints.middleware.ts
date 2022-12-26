@@ -33,6 +33,10 @@ const preloadMap = {
     '/src/containers/BudgetList/BudgetList.css',
     '/src/containers/BudgetListItem/BudgetListItem.mjs',
     '/src/containers/BudgetListItem/BudgetListItem.css',
+    '/src/containers/TransactionsList/TransactionsList.mjs',
+    '/src/containers/TransactionsList/TransactionsList.css',
+    '/src/containers/TransactionsListItem/TransactionsListItem.mjs',
+    '/src/containers/TransactionsListItem/TransactionsListItem.css',
   ],
   '/create': [
     '/src/layouts/Main/MainLayout.mjs',
