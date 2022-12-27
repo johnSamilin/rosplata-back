@@ -25,7 +25,7 @@ export class BudgetsService {
           include: [
             {
               model: Users,
-              attributes: ['id'],
+              attributes: ['id', 'name', 'picture'],
             }
           ],
         },
