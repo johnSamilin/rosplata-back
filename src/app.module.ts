@@ -14,6 +14,10 @@ import { UsersController } from './api/users/users.controller';
 import { UsersModule } from './api/users/users.module';
 import { Users } from './api/models/Users';
 import { UsersService } from './api/users/users.service';
+import { TransactionsModule } from './api/transactions/transactions.module';
+import { TransactionsController } from './api/transactions/transactions.controller';
+import { TransactionsService } from './api/transactions/transactions.service';
+import { Transactions } from './api/models/Transactions';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const configs = require('../db/config/config.json');
@@ -25,12 +29,24 @@ const env = CONFIG.IS_DEV ? 'development' : 'production';
     SequelizeModule.forRoot(configs[env]),
     HttpMiddleware,
     EarlyHintsMiddleware,
-    SequelizeModule.forFeature([Budgets, Users]),
+    SequelizeModule.forFeature([Budgets, Users, Transactions]),
     BudgetsModule,
     UsersModule,
+    TransactionsModule,
   ],
-  controllers: [BudgetsController, UsersController, AppController],
-  providers: [BudgetsService, UsersService, AppService, FirebaseAuthStrategy],
+  controllers: [
+    BudgetsController,
+    UsersController,
+    TransactionsController,
+    AppController,
+  ],
+  providers: [
+    BudgetsService,
+    UsersService,
+    TransactionsService,
+    AppService,
+    FirebaseAuthStrategy,
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

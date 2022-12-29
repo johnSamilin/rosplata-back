@@ -51,8 +51,8 @@ export class BudgetsController {
       res.send(HttpStatus.BAD_REQUEST);
       return;
     }
-    await this.budgetsService.create(body.name, user.uid);
+    const newBudget = await this.budgetsService.create(body.name, user.uid);
 
-    res.status(HttpStatus.CREATED).send({ created: true });
+    res.status(HttpStatus.CREATED).send({ id: newBudget.id });
   }
 }

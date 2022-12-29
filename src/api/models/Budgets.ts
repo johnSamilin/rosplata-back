@@ -2,10 +2,12 @@ import {
   AutoIncrement,
   Column,
   ForeignKey,
+  HasMany,
   Model,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
+import { Transactions } from './Transactions';
 import { Users } from './Users';
 
 @Table({
@@ -23,4 +25,7 @@ export class Budgets extends Model {
   @ForeignKey(() => Users)
   @Column
   userId: string;
+
+  @HasMany(() => Transactions)
+  transactions: Transactions[];
 }

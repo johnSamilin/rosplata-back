@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Budgets } from 'src/api/models/Budgets';
 import { Op } from 'sequelize';
+import { Transactions } from '../models/Transactions';
+import { Users } from '../models/Users';
 
 @Injectable()
 export class BudgetsService {
@@ -16,7 +18,18 @@ export class BudgetsService {
         userId: {
           [Op.eq]: userId,
         },
-      }
+      },
+      include: [
+        {
+          model: Transactions,
+          include: [
+            {
+              model: Users,
+              attributes: ['id', 'name', 'picture'],
+            }
+          ],
+        },
+      ],
     });
   }
 
@@ -28,8 +41,19 @@ export class BudgetsService {
         },
         id: {
           [Op.eq]: id,
-        }
-      }
+        },
+      },
+      include: [
+        {
+          model: Transactions,
+          include: [
+            {
+              model: Users,
+              attributes: ['id', 'name', 'picture'],
+            }
+          ],
+        },
+      ],
     });
   }
 
