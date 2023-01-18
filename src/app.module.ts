@@ -18,6 +18,7 @@ import { TransactionsModule } from './api/transactions/transactions.module';
 import { TransactionsController } from './api/transactions/transactions.controller';
 import { TransactionsService } from './api/transactions/transactions.service';
 import { Transactions } from './api/models/Transactions';
+import { Participants } from './api/models/Participants';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const configs = require('../db/config/config.json');
@@ -29,7 +30,7 @@ const env = CONFIG.IS_DEV ? 'development' : 'production';
     SequelizeModule.forRoot(configs[env]),
     HttpMiddleware,
     EarlyHintsMiddleware,
-    SequelizeModule.forFeature([Budgets, Users, Transactions]),
+    SequelizeModule.forFeature([Budgets, Users, Transactions, Participants]),
     BudgetsModule,
     UsersModule,
     TransactionsModule,

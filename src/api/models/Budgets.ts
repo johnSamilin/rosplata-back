@@ -7,6 +7,7 @@ import {
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
+import { Participants } from './Participants';
 import { Transactions } from './Transactions';
 import { Users } from './Users';
 
@@ -28,4 +29,7 @@ export class Budgets extends Model {
 
   @HasMany(() => Transactions)
   transactions: Transactions[];
+  
+  @HasMany(() => Participants)
+  participants: Participants[];
 }
