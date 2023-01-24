@@ -5,6 +5,7 @@ import { Op } from 'sequelize';
 import { Transactions } from '../models/Transactions';
 import { Users } from '../models/Users';
 import { Participants, PARTICIPANT_STATUSES } from '../models/Participants';
+import { allowedUserStatuses } from './budgets.controller';
 
 @Injectable()
 export class BudgetsService {
@@ -14,7 +15,7 @@ export class BudgetsService {
 
     @InjectModel(Participants)
     private participants: typeof Participants,
-  ) { }
+  ) {}
 
   async getAll(userId: string) {
     const userBudgets = await this.participants.findAll({
@@ -23,18 +24,26 @@ export class BudgetsService {
           [Op.eq]: userId,
         },
       },
-      attributes: ['budgetId'],
+      attributes: ['budgetId', 'status'],
     });
-    return this.budgets.findAll({
+    const { budgetIds, statusesByBudgetId } = userBudgets.reduce(
+      (acc, { budgetId, status }) => {
+        acc.budgetIds.push(budgetId);
+        acc.statusesByBudgetId[budgetId] = status;
+        return acc;
+      },
+      { budgetIds: [], statusesByBudgetId: {} },
+    );
+    const budgets = await this.budgets.findAll({
       where: {
         [Op.or]: {
           userId: {
             [Op.eq]: userId,
           },
           id: {
-            [Op.in]: userBudgets.map((p) => p.budgetId),
+            [Op.in]: budgetIds,
           },
-        }
+        },
       },
       include: [
         {
@@ -46,12 +55,32 @@ export class BudgetsService {
             },
           ],
         },
+        {
+          model: Participants,
+          attributes: ['userId', 'status'],
+        },
       ],
+    });
+
+    return budgets.map((budgetModel) => {
+      const budget = budgetModel.get();
+      if (budget.userId === userId) {
+        budget.currentUserStatus = PARTICIPANT_STATUSES.OWNER;
+        return budget;
+      }
+
+      budget.currentUserStatus = statusesByBudgetId[budget.id];
+      if (!allowedUserStatuses.includes(budget.currentUserStatus)) {
+        budget.transactions = [];
+        budget.participants = [];
+      }
+
+      return budget;
     });
   }
 
   async get(id: string): Promise<Budgets> {
-    return this.budgets.findOne({
+    const budgetModel = await this.budgets.findOne({
       where: {
         id: {
           [Op.eq]: id,
@@ -69,10 +98,14 @@ export class BudgetsService {
         },
         {
           model: Participants,
-          attributes: ['id', 'status'],
+          attributes: ['userId', 'status'],
         },
       ],
     });
+
+    const budget = budgetModel.get();
+    budget.currentUserStatus = PARTICIPANT_STATUSES.UNKNOWN;
+    return budget;
   }
 
   async create(name: string, userId: string) {

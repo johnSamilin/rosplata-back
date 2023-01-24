@@ -14,10 +14,14 @@ import {
 import { AuthGuard } from '@nestjs/passport/dist';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response, Request } from 'express';
+import { Budgets, BudgetsShort } from '../models/Budgets';
 import { PARTICIPANT_STATUSES } from '../models/Participants';
 import { BudgetsService } from './budgets.service';
 
-const allowedUserStatuses = [PARTICIPANT_STATUSES.ACTIVE];
+export const allowedUserStatuses = [
+  PARTICIPANT_STATUSES.ACTIVE,
+  PARTICIPANT_STATUSES.OWNER,
+];
 
 @Controller('api/budgets')
 @UseGuards(AuthGuard('firebase'))
@@ -26,7 +30,6 @@ export class BudgetsController {
 
   @Get('')
   async list(@Req() req: Request) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const user = req.user;
     return await this.budgetsService.getAll(user.uid);
@@ -34,40 +37,46 @@ export class BudgetsController {
 
   @Get(':id')
   async findOne(@Param('id') id, @Req() req: Request) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const user = req.user;
-    const budget = await this.budgetsService.get(id);
+    const budgetModel = await this.budgetsService.get(id);
+    let currentUserStatus = PARTICIPANT_STATUSES.UNKNOWN;
 
-    const currentParticipantIndex = budget.participants.findIndex(
-      (id) => id === user.id,
+    const currentParticipantIndex = budgetModel.participants.findIndex(
+      ({ userId }) => userId === user.uid,
     );
 
-    const userHasRights =
-      user.uid === budget.userId ||
-      (currentParticipantIndex > -1 &&
-        allowedUserStatuses.includes(
-          budget.participants[currentParticipantIndex].status,
-        ));
+    if (user.uid === budgetModel.userId) {
+      currentUserStatus = PARTICIPANT_STATUSES.OWNER;
+    } else {
+      currentUserStatus =
+        currentParticipantIndex === -1
+          ? PARTICIPANT_STATUSES.UNKNOWN
+          : budgetModel.participants[currentParticipantIndex].status;
+    }
 
-    return userHasRights
-      ? budget
+    const userHasRights = allowedUserStatuses.includes(currentUserStatus);
+
+    const budget: Budgets | BudgetsShort = userHasRights
+      ? budgetModel
       : {
-          id: budget.id,
-          name: budget.name,
-          participantsCount: budget.participants.length,
-          sum: budget.transactions.reduce((acc, t) => {
+          id: budgetModel.id,
+          name: budgetModel.name,
+          participantsCount: budgetModel.participants.length,
+          sum: budgetModel.transactions.reduce((acc, t) => {
             //@ts-ignore
             acc += parseFloat(t.amount);
             return acc;
           }, 0),
         };
+
+    budget.currentUserStatus = currentUserStatus;
+    return budget;
   }
 
   @Put('')
   @UseInterceptors(FileInterceptor('body'))
   async create(@Body() body, @Res() res: Response, @Req() req: Request) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const user = req.user;
     if (
@@ -92,7 +101,6 @@ export class BudgetsController {
     @Res() res: Response,
     @Req() req: Request,
   ) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const user = req.user;
     const budget = await this.budgetsService.get(id);
@@ -117,7 +125,6 @@ export class BudgetsController {
     @Res() res: Response,
     @Req() req: Request,
   ) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const user = req.user;
     const budget = await this.budgetsService.get(budgetId);
@@ -136,5 +143,4 @@ export class BudgetsController {
 
     res.status(HttpStatus.OK).send({ id: budgetId });
   }
-
 }

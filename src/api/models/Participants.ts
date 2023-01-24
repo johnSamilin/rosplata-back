@@ -10,10 +10,12 @@ import { Budgets } from './Budgets';
 import { Users } from './Users';
 
 export const PARTICIPANT_STATUSES = {
+  UNKNOWN: -1,
   INVITED: 0,
   ACTIVE: 1,
   BANNED: 2,
   REFUSED: 3,
+  OWNER: 4,
 };
 
 @Table({
