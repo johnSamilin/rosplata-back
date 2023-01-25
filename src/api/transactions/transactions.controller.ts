@@ -52,7 +52,8 @@ export class TransactionsController {
       );
       res.status(HttpStatus.CREATED).send({ id: transaction.id });
     } catch (error) {
-      res.status(HttpStatus.BAD_REQUEST).send({ error: error.toString() });
+      res.status(HttpStatus.BAD_REQUEST);
+      res.send(error.message);
     }
   }
 }
