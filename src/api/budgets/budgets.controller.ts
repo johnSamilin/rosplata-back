@@ -105,9 +105,7 @@ export class BudgetsController {
     const user = req.user;
     const budget = await this.budgetsService.get(id);
     if (user.uid === budget.userId) {
-      res
-        .status(HttpStatus.BAD_REQUEST)
-        .send({ error: 'You are already an owner' });
+      res.status(HttpStatus.BAD_REQUEST).send('You are already an owner');
 
       return;
     }
@@ -129,9 +127,7 @@ export class BudgetsController {
     const user = req.user;
     const budget = await this.budgetsService.get(budgetId);
     if (user.uid !== budget.userId) {
-      res
-        .status(HttpStatus.BAD_REQUEST)
-        .send({ error: 'You are not an owner' });
+      res.status(HttpStatus.BAD_REQUEST).send('You are not an owner');
 
       return;
     }
