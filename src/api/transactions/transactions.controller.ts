@@ -21,14 +21,15 @@ export class TransactionsController {
   constructor(private transactionsService: TransactionsService) { }
 
   @Get(':budgetId')
-  async findAllByBudget(@Param('budgetId') budgetId) {
-    return await this.transactionsService.getAllByBudget(budgetId);
+  async findAllByBudget(@Param('budgetId') budgetId, @Req() req: Request) {
+    // @ts-ignore
+    const user = req.user;
+    return await this.transactionsService.getAllByBudget(budgetId, user.uid);
   }
 
   @Post('')
   @UseInterceptors(FileInterceptor('body'))
   async create(@Body() body, @Res() res: Response, @Req() req: Request) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const user = req.user;
     const amount = parseFloat(body.amount);

@@ -19,7 +19,23 @@ export class TransactionsService {
     private budgets: typeof Budgets,
   ) {}
 
-  async getAllByBudget(budgetId: number) {
+  async getAllByBudget(budgetId: number, userId: string) {
+    const currentParticipant = this.participants.findOne({
+      where: {
+        userId: {
+          [Op.eq]: userId,
+        },
+      },
+    });
+    const budgetOwner = this.budgets.findByPk(budgetId, {
+      attributes: ['userId'],
+    });
+    if (
+      (await currentParticipant)?.status !== PARTICIPANT_STATUSES.ACTIVE &&
+      (await budgetOwner).userId !== userId
+    ) {
+      return [];
+    }
     return await this.transactions.findAll({
       where: {
         budgetId: {

@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   UseGuards,
   Post,
+  Delete,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport/dist';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -93,27 +94,101 @@ export class BudgetsController {
     res.status(HttpStatus.CREATED).send({ id: newBudget.id });
   }
 
-  @Post(':id/participant')
-  @UseInterceptors(FileInterceptor('body'))
+  /**
+   * Ask for participation
+   * @param id
+   */
+  @Put(':id/participant/invite')
   async sendParticipationRequest(
     @Param('id') id,
-    @Body() body,
     @Res() res: Response,
     @Req() req: Request,
   ) {
     // @ts-ignore
     const user = req.user;
     const budget = await this.budgetsService.get(id);
-    if (user.uid === budget.userId) {
-      res.status(HttpStatus.BAD_REQUEST).send('You are already an owner');
+    const currentUserStatus =
+      budget.participants.find((p) => p.userId === user.uid)?.status ??
+      PARTICIPANT_STATUSES.UNKNOWN;
+    if (currentUserStatus !== PARTICIPANT_STATUSES.UNKNOWN) {
+      res
+        .status(HttpStatus.BAD_REQUEST)
+        .send('Seems like you already participate');
 
       return;
     }
     await this.budgetsService.addParticipant(id, user.uid);
 
-    res.status(HttpStatus.OK).send({ id });
+    res
+      .status(HttpStatus.OK)
+      .send({ newStatus: PARTICIPANT_STATUSES.WAITING_APPROVAL });
   }
 
+  /**
+   * Accept invite
+   * @param id
+   */
+  @Post(':id/participant/invite')
+  async acceptInvite(
+    @Param('id') id,
+    @Res() res: Response,
+    @Req() req: Request,
+  ) {
+    // @ts-ignore
+    const user = req.user;
+    const budget = await this.budgetsService.get(id);
+    const currentUserStatus =
+      budget.participants.find((p) => p.userId === user.uid)?.status ??
+      PARTICIPANT_STATUSES.UNKNOWN;
+    if (currentUserStatus !== PARTICIPANT_STATUSES.INVITED) {
+      res.status(HttpStatus.BAD_REQUEST).send('You have to be invited');
+
+      return;
+    }
+    await this.budgetsService.changeParticipantStatus(
+      id,
+      user.uid,
+      PARTICIPANT_STATUSES.ACTIVE,
+    );
+
+    res.status(HttpStatus.OK).send({ newStatus: PARTICIPANT_STATUSES.ACTIVE });
+  }
+
+  /**
+   * Accept invite
+   * @param id
+   */
+  @Delete(':id/participant/invite')
+  async declineInvite(
+    @Param('id') id,
+    @Res() res: Response,
+    @Req() req: Request,
+  ) {
+    // @ts-ignore
+    const user = req.user;
+    const budget = await this.budgetsService.get(id);
+    const currentUserStatus =
+      budget.participants.find((p) => p.userId === user.uid)?.status ??
+      PARTICIPANT_STATUSES.UNKNOWN;
+    if (currentUserStatus !== PARTICIPANT_STATUSES.INVITED) {
+      res.status(HttpStatus.BAD_REQUEST).send('You have to be invited');
+
+      return;
+    }
+    await this.budgetsService.changeParticipantStatus(
+      id,
+      user.uid,
+      PARTICIPANT_STATUSES.BANNED,
+    );
+
+    res.status(HttpStatus.OK).send({ newStatus: PARTICIPANT_STATUSES.BANNED });
+  }
+  /**
+   * Add participant (owner)
+   * @param budgetId
+   * @param participantId
+   * @param body { status: PARTICIPANT_STATUES }
+   */
   @Post(':id/participant/:participantId')
   @UseInterceptors(FileInterceptor('body'))
   async changeParticipantStatus(
@@ -137,6 +212,6 @@ export class BudgetsController {
       body.status,
     );
 
-    res.status(HttpStatus.OK).send({ id: budgetId });
+    res.status(HttpStatus.OK).send({ newStatus: body.status });
   }
 }

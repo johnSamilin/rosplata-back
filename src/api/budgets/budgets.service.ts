@@ -119,7 +119,7 @@ export class BudgetsService {
     return this.participants.create({
       userId,
       budgetId,
-      status: PARTICIPANT_STATUSES.INVITED,
+      status: PARTICIPANT_STATUSES.WAITING_APPROVAL,
     });
   }
 

@@ -16,6 +16,7 @@ export const PARTICIPANT_STATUSES = {
   BANNED: 2,
   REFUSED: 3,
   OWNER: 4,
+  WAITING_APPROVAL: 5,
 };
 
 @Table({
