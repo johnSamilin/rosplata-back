@@ -1,5 +1,6 @@
 import {
   AutoIncrement,
+  BelongsTo,
   Column,
   ForeignKey,
   Model,
@@ -38,4 +39,7 @@ export class Participants extends Model {
 
   @Column
   status: number;
+  
+  @BelongsTo(() => Users)
+  user: Users;
 }

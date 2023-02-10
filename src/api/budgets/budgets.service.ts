@@ -15,7 +15,7 @@ export class BudgetsService {
 
     @InjectModel(Participants)
     private participants: typeof Participants,
-  ) {}
+  ) { }
 
   async getAll(userId: string) {
     const userBudgets = await this.participants.findAll({
@@ -58,6 +58,12 @@ export class BudgetsService {
         {
           model: Participants,
           attributes: ['userId', 'status'],
+          include: [
+            {
+              model: Users,
+              attributes: ['name', 'picture'],
+            },
+          ],
         },
       ],
     });
@@ -99,6 +105,12 @@ export class BudgetsService {
         {
           model: Participants,
           attributes: ['userId', 'status'],
+          include: [
+            {
+              model: Users,
+              attributes: ['name', 'picture'],
+            },
+          ],
         },
       ],
     });
