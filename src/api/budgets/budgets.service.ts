@@ -121,10 +121,18 @@ export class BudgetsService {
   }
 
   async create(name: string, userId: string) {
-    return this.budgets.create({
+    const newBudget = await this.budgets.create({
       name,
       userId,
     });
+
+    await this.participants.create({
+      userId,
+      budgetId: newBudget.id,
+      status: PARTICIPANT_STATUSES.OWNER,
+    });
+
+    return newBudget;
   }
 
   addParticipant(budgetId: string, userId: string) {
