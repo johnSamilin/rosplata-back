@@ -155,7 +155,7 @@ export class BudgetsController {
   }
 
   /**
-   * Accept invite
+   * Decline invite
    * @param id
    */
   @Delete(':id/participant/invite')
@@ -184,7 +184,7 @@ export class BudgetsController {
     res.status(HttpStatus.OK).send({ newStatus: PARTICIPANT_STATUSES.BANNED });
   }
   /**
-   * Add participant (owner)
+   * Change participant status (owner)
    * @param budgetId
    * @param participantId
    * @param body { status: PARTICIPANT_STATUES }

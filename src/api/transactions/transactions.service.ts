@@ -52,26 +52,30 @@ export class TransactionsService {
   }
 
   async create(budgetId: number, ownerId: string, amount: number) {
-    const currentParticipant = this.participants.findOne({
+    const currentParticipant = await this.participants.findOne({
       where: {
         userId: {
           [Op.eq]: ownerId,
         },
+        budgetId: {
+          [Op.eq]: budgetId,
+        }
       },
     });
-    const budgetOwner = this.budgets.findByPk(budgetId, {
+    const budgetOwner = await this.budgets.findByPk(budgetId, {
       attributes: ['userId'],
     });
     if (
-      (await currentParticipant)?.status !== PARTICIPANT_STATUSES.ACTIVE &&
-      (await budgetOwner).userId !== ownerId
+      currentParticipant?.status === PARTICIPANT_STATUSES.ACTIVE ||
+      budgetOwner.userId === ownerId
     ) {
-      throw new Error('You are not approved participant nor budget owner');
+      return this.transactions.create({
+        budgetId,
+        ownerId,
+        amount,
+      });
     }
-    return this.transactions.create({
-      budgetId,
-      ownerId,
-      amount,
-    });
+    
+    throw new Error('You are not approved participant nor budget owner');
   }
 }
