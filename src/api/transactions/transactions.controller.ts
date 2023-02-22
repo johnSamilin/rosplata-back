@@ -18,17 +18,18 @@ import { TransactionsService } from './transactions.service';
 @Controller('api/transactions')
 @UseGuards(AuthGuard('firebase'))
 export class TransactionsController {
-  constructor(private transactionsService: TransactionsService) {}
+  constructor(private transactionsService: TransactionsService) { }
 
   @Get(':budgetId')
-  async findAllByBudget(@Param('budgetId') budgetId) {
-    return await this.transactionsService.getAllByBudget(budgetId);
+  async findAllByBudget(@Param('budgetId') budgetId, @Req() req: Request) {
+    // @ts-ignore
+    const user = req.user;
+    return await this.transactionsService.getAllByBudget(budgetId, user.uid);
   }
 
   @Post('')
   @UseInterceptors(FileInterceptor('body'))
   async create(@Body() body, @Res() res: Response, @Req() req: Request) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const user = req.user;
     const amount = parseFloat(body.amount);
@@ -44,12 +45,16 @@ export class TransactionsController {
       res.status(HttpStatus.BAD_REQUEST).send('Budget id should be specified');
       return;
     }
-    const transaction = await this.transactionsService.create(
-      budgetId,
-      user.uid,
-      amount,
-    );
-
-    res.status(HttpStatus.CREATED).send({ id: transaction.id });
+    try {
+      const transaction = await this.transactionsService.create(
+        budgetId,
+        user.uid,
+        amount,
+      );
+      res.status(HttpStatus.CREATED).send({ id: transaction.id });
+    } catch (error) {
+      res.status(HttpStatus.BAD_REQUEST);
+      res.send(error.message);
+    }
   }
 }

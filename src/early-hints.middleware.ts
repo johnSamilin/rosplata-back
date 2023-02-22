@@ -23,6 +23,7 @@ const commonPreloadMap = [
   '/src/App.mjs',
   '/src/core/LayoutManager.mjs',
   '/src/core/RequestManager.mjs',
+  '/src/core/ListComponent.mjs',
   'https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js',
   'https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js',
 ];
@@ -35,10 +36,23 @@ const preloadMap = {
     '/src/containers/BudgetList/BudgetList.css',
     '/src/containers/BudgetListItem/BudgetListItem.mjs',
     '/src/containers/BudgetListItem/BudgetListItem.css',
+  ],
+  '/budgets/\\d+': [
+    '/src/layouts/Main/MainLayout.mjs',
+    '/src/layouts/Main/MainLayout.css',
+    '/src/constants/userStatuses.mjs',
+    '/src/containers/BudgetList/BudgetList.mjs',
+    '/src/containers/BudgetList/BudgetList.css',
+    '/src/containers/BudgetListItem/BudgetListItem.mjs',
+    '/src/containers/BudgetListItem/BudgetListItem.css',
     '/src/containers/TransactionsList/TransactionsList.mjs',
     '/src/containers/TransactionsList/TransactionsList.css',
     '/src/containers/TransactionsListItem/TransactionsListItem.mjs',
     '/src/containers/TransactionsListItem/TransactionsListItem.css',
+    '/src/containers/ParticipantsList/ParticipantsList.mjs',
+    '/src/containers/ParticipantsList/ParticipantsList.css',
+    '/src/containers/ParticipantsListItem/ParticipantsListItem.mjs',
+    '/src/containers/ParticipantsListItem/ParticipantsListItem.css',
   ],
   '/create': [
     '/src/layouts/Main/MainLayout.mjs',
@@ -70,13 +84,19 @@ const preloadMap = {
   ],
 };
 
+const preloadPatterns = Object.keys(preloadMap);
+
 @Injectable()
 export class EarlyHintsMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: () => void) {
-    if (req.url in preloadMap) {
+    const key = preloadPatterns.find((k) =>
+      req.baseUrl.match(new RegExp(`^${k}$`)),
+    );
+
+    if (key in preloadMap) {
       res.set({
         Link: commonPreloadMap
-          .concat(preloadMap[req.url])
+          .concat(preloadMap[key])
           .map(mapResourceToPreloadLink)
           .join(', '),
       });

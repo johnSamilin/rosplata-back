@@ -7,11 +7,12 @@ import {
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
+import { Participants } from './Participants';
 import { Transactions } from './Transactions';
 import { Users } from './Users';
 
 @Table({
-  tableName: 'budgets'
+  tableName: 'budgets',
 })
 export class Budgets extends Model {
   @PrimaryKey
@@ -28,4 +29,15 @@ export class Budgets extends Model {
 
   @HasMany(() => Transactions)
   transactions: Transactions[];
+
+  @HasMany(() => Participants)
+  participants: Participants[];
+
+  currentUserStatus?: number;
+}
+
+export interface BudgetsShort
+  extends Pick<Budgets, 'id' | 'name' | 'currentUserStatus'> {
+  participantsCount: number;
+  sum: number;
 }
