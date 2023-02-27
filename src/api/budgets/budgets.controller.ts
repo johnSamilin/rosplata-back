@@ -18,6 +18,7 @@ import { Response, Request } from 'express';
 import { Budgets, BudgetsShort } from '../models/Budgets';
 import { PARTICIPANT_STATUSES } from '../models/Participants';
 import { BudgetsService } from './budgets.service';
+import { filterXSS } from 'xss';
 
 export const allowedUserStatuses = [
   PARTICIPANT_STATUSES.ACTIVE,
@@ -80,16 +81,16 @@ export class BudgetsController {
   async create(@Body() body, @Res() res: Response, @Req() req: Request) {
     // @ts-ignore
     const user = req.user;
-    if (
-      !body.name ||
-      body.name.length < 3 ||
-      body.name.length > 20 ||
-      /([^\w\d ]+)/gi.test(body.name)
-    ) {
-      res.send(HttpStatus.BAD_REQUEST);
+    if (!body.name || body.name.length < 3 || body.name.length > 20) {
+      res.status(HttpStatus.BAD_REQUEST).send({
+        error: 'Name should be at least 1 and not more than 20 symbols long',
+      });
       return;
     }
-    const newBudget = await this.budgetsService.create(body.name, user.uid);
+    const newBudget = await this.budgetsService.create(
+      filterXSS(body.name),
+      user.uid,
+    );
 
     res.status(HttpStatus.CREATED).send({ id: newBudget.id });
   }
