@@ -15,7 +15,6 @@ import { Users } from './Users';
 })
 export class Transactions extends Model {
   @PrimaryKey
-  @AutoIncrement
   @Column
   id: number;
 

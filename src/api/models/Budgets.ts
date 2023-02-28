@@ -16,7 +16,6 @@ import { Users } from './Users';
 })
 export class Budgets extends Model {
   @PrimaryKey
-  @AutoIncrement
   @Column
   id: number;
 

@@ -18,7 +18,7 @@ import { TransactionsService } from './transactions.service';
 @Controller('api/transactions')
 @UseGuards(AuthGuard('firebase'))
 export class TransactionsController {
-  constructor(private transactionsService: TransactionsService) { }
+  constructor(private transactionsService: TransactionsService) {}
 
   @Get(':budgetId')
   async findAllByBudget(@Param('budgetId') budgetId, @Req() req: Request) {
@@ -33,7 +33,7 @@ export class TransactionsController {
     // @ts-ignore
     const user = req.user;
     const amount = parseFloat(body.amount);
-    const budgetId = parseInt(body.budgetId, 10);
+    const budgetId = body.budgetId;
 
     if (amount <= 0) {
       res
@@ -42,19 +42,21 @@ export class TransactionsController {
       return;
     }
     if (budgetId <= 0) {
-      res.status(HttpStatus.BAD_REQUEST).send('Budget id should be specified');
+      res
+        .status(HttpStatus.BAD_REQUEST)
+        .send({ error: 'Budget id should be specified' });
       return;
     }
     try {
       const transaction = await this.transactionsService.create(
+        body.id,
         budgetId,
         user.uid,
         amount,
       );
       res.status(HttpStatus.CREATED).send({ id: transaction.id });
     } catch (error) {
-      res.status(HttpStatus.BAD_REQUEST);
-      res.send(error.message);
+      res.status(HttpStatus.BAD_REQUEST).send({ error: error.message });
     }
   }
 }
