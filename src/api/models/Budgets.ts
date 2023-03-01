@@ -17,7 +17,7 @@ import { Users } from './Users';
 export class Budgets extends Model {
   @PrimaryKey
   @Column
-  id: number;
+  id: string;
 
   @Column
   name: string;
