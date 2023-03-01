@@ -29,7 +29,9 @@ export class UsersController {
       );
     } catch (er) {
       console.error('Error while upserting user', er);
-      res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+      res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .send({ error: 'Error while upserting user' });
       return;
     }
     return res.status(HttpStatus.OK).send({});

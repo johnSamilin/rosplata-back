@@ -88,6 +88,7 @@ export class BudgetsController {
       return;
     }
     const newBudget = await this.budgetsService.create(
+      body.id,
       filterXSS(body.name),
       user.uid,
     );
@@ -142,7 +143,9 @@ export class BudgetsController {
       budget.participants.find((p) => p.userId === user.uid)?.status ??
       PARTICIPANT_STATUSES.UNKNOWN;
     if (currentUserStatus !== PARTICIPANT_STATUSES.INVITED) {
-      res.status(HttpStatus.BAD_REQUEST).send('You have to be invited');
+      res
+        .status(HttpStatus.BAD_REQUEST)
+        .send({ error: 'You have to be invited' });
 
       return;
     }
@@ -172,7 +175,9 @@ export class BudgetsController {
       budget.participants.find((p) => p.userId === user.uid)?.status ??
       PARTICIPANT_STATUSES.UNKNOWN;
     if (currentUserStatus !== PARTICIPANT_STATUSES.INVITED) {
-      res.status(HttpStatus.BAD_REQUEST).send('You have to be invited');
+      res
+        .status(HttpStatus.BAD_REQUEST)
+        .send({ error: 'You have to be invited' });
 
       return;
     }
@@ -203,7 +208,9 @@ export class BudgetsController {
     const user = req.user;
     const budget = await this.budgetsService.get(budgetId);
     if (user.uid !== budget.userId) {
-      res.status(HttpStatus.BAD_REQUEST).send('You are not an owner');
+      res
+        .status(HttpStatus.BAD_REQUEST)
+        .send({ error: 'You are not an owner' });
 
       return;
     }

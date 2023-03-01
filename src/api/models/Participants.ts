@@ -31,7 +31,7 @@ export class Participants extends Model {
 
   @ForeignKey(() => Budgets)
   @Column
-  budgetId: number;
+  budgetId: string;
 
   @ForeignKey(() => Users)
   @Column

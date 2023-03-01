@@ -19,7 +19,7 @@ export class TransactionsService {
     private budgets: typeof Budgets,
   ) {}
 
-  async getAllByBudget(budgetId: number, userId: string) {
+  async getAllByBudget(budgetId: string, userId: string) {
     const currentParticipant = this.participants.findOne({
       where: {
         userId: {
@@ -51,7 +51,7 @@ export class TransactionsService {
     });
   }
 
-  async create(budgetId: number, ownerId: string, amount: number) {
+  async create(id: string, budgetId: string, ownerId: string, amount: number) {
     const currentParticipant = await this.participants.findOne({
       where: {
         userId: {
@@ -70,6 +70,7 @@ export class TransactionsService {
       budgetOwner.userId === ownerId
     ) {
       return this.transactions.create({
+        id,
         budgetId,
         ownerId,
         amount,

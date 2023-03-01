@@ -15,9 +15,8 @@ import { Users } from './Users';
 })
 export class Transactions extends Model {
   @PrimaryKey
-  @AutoIncrement
   @Column
-  id: number;
+  id: string;
 
   @Column
   @ForeignKey(() => Users)
@@ -28,7 +27,7 @@ export class Transactions extends Model {
 
   @ForeignKey(() => Budgets)
   @Column
-  budgetId: number;
+  budgetId: string;
 
   @Column
   amount: number;
