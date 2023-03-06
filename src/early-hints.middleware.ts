@@ -26,10 +26,11 @@ const commonPreloadMap = [
   '/src/core/ListComponent.mjs',
   'https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js',
   'https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js',
+  '/styles/App.css',
 ];
 
 const preloadMap = {
-  '/': [
+  '\\/': [
     '/src/layouts/Main/MainLayout.mjs',
     '/src/layouts/Main/MainLayout.css',
     '/src/containers/BudgetList/BudgetList.mjs',
@@ -37,7 +38,7 @@ const preloadMap = {
     '/src/containers/BudgetListItem/BudgetListItem.mjs',
     '/src/containers/BudgetListItem/BudgetListItem.css',
   ],
-  '/budgets/\\d+': [
+  '\\/budgets\\/([-\\da-zA-Z]+)': [
     '/src/layouts/Main/MainLayout.mjs',
     '/src/layouts/Main/MainLayout.css',
     '/src/constants/userStatuses.mjs',
@@ -54,7 +55,7 @@ const preloadMap = {
     '/src/containers/ParticipantsListItem/ParticipantsListItem.mjs',
     '/src/containers/ParticipantsListItem/ParticipantsListItem.css',
   ],
-  '/create': [
+  '\\/create': [
     '/src/layouts/Main/MainLayout.mjs',
     '/src/layouts/Main/MainLayout.css',
     '/src/containers/BudgetList/BudgetList.mjs',
@@ -64,7 +65,7 @@ const preloadMap = {
     '/src/containers/NewBudget/NewBudget.mjs',
     '/src/containers/NewBudget/NewBudget.css',
   ],
-  '/settings': [
+  '\\/settings': [
     '/src/layouts/Settings/SettingsLayout.mjs',
     '/src/layouts/Settings/SettingsLayout.css',
     '/src/core/SettingsManager.mjs',
@@ -73,7 +74,7 @@ const preloadMap = {
     '/src/containers/Settings/Settings.mjs',
     '/src/containers/Settings/Settings.css',
   ],
-  '/settings/features': [
+  '\\/settings\\/features': [
     '/src/layouts/Settings/SettingsLayout.mjs',
     '/src/layouts/Settings/SettingsLayout.css',
     '/src/core/SettingsManager.mjs',
