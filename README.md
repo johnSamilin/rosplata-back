@@ -24,6 +24,7 @@ Edit `./src/config.ts` if needed.
 |IS_DEV   |true / false   |Flag that indicates whether this is dev env   |
 |LE_TOKEN   |''   |Letsencrypt token. Being used in domain verification process   |
 |HOST   |'https://localhost' / 'https://your-cool-domain'   |Current domain. `HttpMiddleware` will block any incoming request which `hostname` header doesn't match this value   |
+|FIREBASE   |   |Firebase authentication settings (you'll obtain them when setting up Firebase)   |
 
 ### Setup DB
 Currently this project uses MySQL as database engine, but you can use DB of your choice. See `./db/config/config.json` and Sequelize ORM docs.
