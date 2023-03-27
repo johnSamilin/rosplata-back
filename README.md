@@ -1,5 +1,8 @@
 This project is a backend for [Rosplata](https://github.com/johnSamilin/rosplata)
 
+## Docs
+https://rosplata-docs.readthedocs.io/en/latest/
+
 ## Start
 To start up, run these commands:
 - `git clone https://github.com/johnSamilin/rosplata-back --recurse-submodules`
