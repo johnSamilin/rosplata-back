@@ -95,6 +95,8 @@ export class BudgetsService {
       include: [
         {
           model: Transactions,
+          separate: true,
+          order: [['createdAt', 'ASC']],
           include: [
             {
               model: Users,

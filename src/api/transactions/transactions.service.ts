@@ -42,6 +42,7 @@ export class TransactionsService {
           [Op.eq]: budgetId,
         },
       },
+      order: [['createdAt', 'ASC']],
       include: [
         {
           model: Users,
@@ -59,7 +60,7 @@ export class TransactionsService {
         },
         budgetId: {
           [Op.eq]: budgetId,
-        }
+        },
       },
     });
     const budgetOwner = await this.budgets.findByPk(budgetId, {
@@ -76,7 +77,7 @@ export class TransactionsService {
         amount,
       });
     }
-    
+
     throw new Error('You are not approved participant nor budget owner');
   }
 }
