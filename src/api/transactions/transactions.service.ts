@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
 import { Budgets } from '../models/Budgets';
+import { ICURRENCIES } from '../models/constants';
 import { Participants, PARTICIPANT_STATUSES } from '../models/Participants';
 import { Transactions } from '../models/Transactions';
 import { Users } from '../models/Users';
@@ -52,7 +53,13 @@ export class TransactionsService {
     });
   }
 
-  async create(id: string, budgetId: string, ownerId: string, amount: number) {
+  async create(
+    id: string,
+    budgetId: string,
+    ownerId: string,
+    amount: number,
+    currency: ICURRENCIES,
+  ) {
     const currentParticipant = await this.participants.findOne({
       where: {
         userId: {
@@ -75,6 +82,7 @@ export class TransactionsService {
         budgetId,
         ownerId,
         amount,
+        currency,
       });
     }
 

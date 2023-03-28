@@ -1,3 +1,4 @@
+import { ENUM } from 'sequelize';
 import {
   AutoIncrement,
   BelongsTo,
@@ -8,6 +9,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { Budgets } from './Budgets';
+import { CURRENCIES } from './constants';
 import { Users } from './Users';
 
 @Table({
@@ -37,4 +39,7 @@ export class Transactions extends Model {
 
   @Column
   updatedAt?: Date;
+
+  @Column(ENUM(...CURRENCIES))
+  currency: string;
 }

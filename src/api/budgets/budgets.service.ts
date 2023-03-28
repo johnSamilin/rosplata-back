@@ -6,6 +6,7 @@ import { Transactions } from '../models/Transactions';
 import { Users } from '../models/Users';
 import { Participants, PARTICIPANT_STATUSES } from '../models/Participants';
 import { allowedUserStatuses } from './budgets.controller';
+import { ICURRENCIES } from '../models/constants';
 
 @Injectable()
 export class BudgetsService {
@@ -15,7 +16,7 @@ export class BudgetsService {
 
     @InjectModel(Participants)
     private participants: typeof Participants,
-  ) { }
+  ) {}
 
   async getAll(userId: string) {
     const userBudgets = await this.participants.findAll({
@@ -122,11 +123,17 @@ export class BudgetsService {
     return budget;
   }
 
-  async create(id: string, name: string, userId: string) {
+  async create(
+    id: string,
+    name: string,
+    currency: ICURRENCIES,
+    userId: string,
+  ) {
     const newBudget = await this.budgets.create({
       id,
       name,
       userId,
+      currency,
     });
 
     await this.participants.create({

@@ -90,6 +90,7 @@ export class BudgetsController {
     const newBudget = await this.budgetsService.create(
       body.id,
       filterXSS(body.name),
+      body.currency,
       user.uid,
     );
 

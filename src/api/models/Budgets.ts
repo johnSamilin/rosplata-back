@@ -1,3 +1,4 @@
+import { ENUM } from 'sequelize';
 import {
   AutoIncrement,
   Column,
@@ -7,6 +8,7 @@ import {
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
+import { CURRENCIES } from './constants';
 import { Participants } from './Participants';
 import { Transactions } from './Transactions';
 import { Users } from './Users';
@@ -31,6 +33,9 @@ export class Budgets extends Model {
 
   @HasMany(() => Participants)
   participants: Participants[];
+
+  @Column(ENUM(...CURRENCIES))
+  currency: string;
 
   currentUserStatus?: number;
 }
