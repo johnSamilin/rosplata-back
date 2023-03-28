@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
 import { Budgets } from '../models/Budgets';
+import { ICURRENCIES } from '../models/constants';
 import { Participants, PARTICIPANT_STATUSES } from '../models/Participants';
 import { Transactions } from '../models/Transactions';
 import { Users } from '../models/Users';
@@ -42,6 +43,7 @@ export class TransactionsService {
           [Op.eq]: budgetId,
         },
       },
+      order: [['createdAt', 'ASC']],
       include: [
         {
           model: Users,
@@ -51,7 +53,13 @@ export class TransactionsService {
     });
   }
 
-  async create(id: string, budgetId: string, ownerId: string, amount: number) {
+  async create(
+    id: string,
+    budgetId: string,
+    ownerId: string,
+    amount: number,
+    currency: ICURRENCIES,
+  ) {
     const currentParticipant = await this.participants.findOne({
       where: {
         userId: {
@@ -59,7 +67,7 @@ export class TransactionsService {
         },
         budgetId: {
           [Op.eq]: budgetId,
-        }
+        },
       },
     });
     const budgetOwner = await this.budgets.findByPk(budgetId, {
@@ -74,9 +82,10 @@ export class TransactionsService {
         budgetId,
         ownerId,
         amount,
+        currency,
       });
     }
-    
+
     throw new Error('You are not approved participant nor budget owner');
   }
 }

@@ -53,6 +53,7 @@ export class TransactionsController {
         budgetId,
         user.uid,
         amount,
+        body.currency,
       );
       res.status(HttpStatus.CREATED).send({ id: transaction.id });
     } catch (error) {
