@@ -1,6 +1,5 @@
-import { ENUM } from 'sequelize';
+import { TEXT, ENUM } from 'sequelize';
 import {
-  AutoIncrement,
   BelongsTo,
   Column,
   ForeignKey,
@@ -42,4 +41,7 @@ export class Transactions extends Model {
 
   @Column(ENUM(...CURRENCIES))
   currency: string;
+
+  @Column(TEXT)
+  comment: string;
 }

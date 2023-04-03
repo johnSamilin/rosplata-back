@@ -40,7 +40,7 @@ module.exports = {
       await queryInterface.removeColumn('budgets', 'currency', {
         transaction,
       });
-      await queryInterface.removeColumn('transacttions', 'currency', {
+      await queryInterface.removeColumn('transactions', 'currency', {
         transaction,
       });
       transaction.commit();

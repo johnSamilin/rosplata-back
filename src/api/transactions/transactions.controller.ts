@@ -13,6 +13,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response, Request } from 'express';
+import { filterXSS } from 'xss';
 import { TransactionsService } from './transactions.service';
 
 @Controller('api/transactions')
@@ -54,6 +55,7 @@ export class TransactionsController {
         user.uid,
         amount,
         body.currency,
+        filterXSS(body.comment),
       );
       res.status(HttpStatus.CREATED).send({ id: transaction.id });
     } catch (error) {
