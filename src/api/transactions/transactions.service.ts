@@ -59,6 +59,7 @@ export class TransactionsService {
     ownerId: string,
     amount: number,
     currency: ICURRENCIES,
+    comment = '',
   ) {
     const currentParticipant = await this.participants.findOne({
       where: {
@@ -83,6 +84,7 @@ export class TransactionsService {
         ownerId,
         amount,
         currency,
+        comment,
       });
     }
 
