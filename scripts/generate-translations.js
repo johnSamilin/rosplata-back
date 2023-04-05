@@ -1,5 +1,5 @@
 const fs = require('fs');
-const langs = require('./langs');
+const { langs } = require('./langs');
 const { getAllNodesToTranslate } = require('./utils');
 
 const translation = {};

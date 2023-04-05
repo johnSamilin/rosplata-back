@@ -37,7 +37,7 @@ module.exports = {
         translations[lang] = JSON.parse(
           fs.readFileSync(`./rosplata/translations/${lang}.json`),
         );
-        console.log(lang)
+        console.log(lang);
       }
       switch (translations[lang][messageId].prop) {
         case 'text':
