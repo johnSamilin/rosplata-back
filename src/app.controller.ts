@@ -12,10 +12,9 @@ import {
 } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { CONFIG } from './config';
+import { supportedLangs } from './langs';
 
 import path = require('path');
-
-const supportedLangs = ['ar', 'es', 'fr', 'ko', 'ru', 'zh', 'hi', 'bn', 'he'];
 
 @Controller()
 export class AppController {
@@ -59,6 +58,10 @@ export class AppController {
         sameSite: 'strict',
         httpOnly: true,
       });
+    } else if (param.code === 'system') {
+      res.cookie('lang', 'system', {
+        expires: new Date(),
+      });
     }
     res.send();
   }
@@ -78,6 +81,7 @@ export class AppController {
         supportedLangs.includes(lang.split('-')[0]),
       );
     }
+    console.log('language', { cookieLang, preferredLang });
     res.sendFile(
       path.resolve(
         preferredLang

@@ -17,7 +17,8 @@
     "migrate": "sequelize db:migrate",
     "unmigrate": "sequelize db:migrate:undo",
     "translations:generate": "node ./scripts/generate-translations.js",
-    "translations:apply": "node ./scripts/apply-translations.js"
+    "translations:apply": "node ./scripts/apply-translations.js",
+    "translations:add": "node ./scripts/add-translation.js"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
