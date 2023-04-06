@@ -18,7 +18,7 @@ import path = require('path');
 
 @Controller()
 export class AppController {
-  constructor() { }
+  constructor() {}
 
   @Get('.well-known/acme-challenge/:key')
   letsencrypt(@Param('key') key) {
@@ -75,11 +75,10 @@ export class AppController {
     } else {
       const langs = req.headers['accept-language']
         ?.split(',')
-        .map((lang) => lang.split(';')[0]);
+        .map((lang) => lang.split(';')[0])
+        .map((lang) => lang.split('-')[0]);
 
-      preferredLang = langs.find((lang) =>
-        supportedLangs.includes(lang.split('-')[0]),
-      );
+      preferredLang = langs.find((lang) => supportedLangs.includes(lang));
     }
     console.log('language', { cookieLang, preferredLang });
     res.sendFile(
