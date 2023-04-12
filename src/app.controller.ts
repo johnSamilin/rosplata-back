@@ -50,22 +50,6 @@ export class AppController {
     res.send(HttpStatus.NOT_FOUND);
   }
 
-  @Post('/lang/:code')
-  changeLang(@Param() param, @Res() res: Response) {
-    if (supportedLangs.includes(param.code)) {
-      res.cookie('lang', param.code, {
-        expires: new Date(new Date().getTime() + 3600 * 1000),
-        sameSite: 'strict',
-        httpOnly: true,
-      });
-    } else if (param.code === 'system') {
-      res.cookie('lang', 'system', {
-        expires: new Date(),
-      });
-    }
-    res.send();
-  }
-
   @Get('*')
   notfound(@Req() req: Request, @Res() res: Response): void {
     let preferredLang;
