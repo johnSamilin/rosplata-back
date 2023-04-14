@@ -22,6 +22,8 @@ export class UsersController {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const user = req.user;
+    let lang;
+    const cookieLang = req.cookies.lang;
     try {
       await this.usersService.upsert(
         user.uid,
@@ -29,6 +31,16 @@ export class UsersController {
         user.email,
         user.picture,
       );
+      if (supportedLangs.includes(cookieLang)) {
+        lang = cookieLang;
+      } else {
+        const langs = req.headers['accept-language']
+          ?.split(',')
+          .map((lang) => lang.split(';')[0])
+          .map((lang) => lang.split('-')[0]);
+
+        lang = langs.find((lang) => supportedLangs.includes(lang));
+      }
     } catch (er) {
       console.error('Error while upserting user', er);
       res
@@ -36,7 +48,7 @@ export class UsersController {
         .send({ error: 'Error while upserting user' });
       return;
     }
-    return res.status(HttpStatus.OK).send({});
+    return res.status(HttpStatus.OK).send({ lang: lang ?? 'en' });
   }
   
   @Post('lang/:code')

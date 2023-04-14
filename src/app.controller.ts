@@ -64,7 +64,10 @@ export class AppController {
 
       preferredLang = langs.find((lang) => supportedLangs.includes(lang));
     }
-    console.log('language', { cookieLang, preferredLang });
+    console.log('language', {
+      accept: req.headers['accept-language'],
+      preferredLang,
+    });
     res.sendFile(
       path.resolve(
         preferredLang
