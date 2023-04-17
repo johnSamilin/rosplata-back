@@ -9,6 +9,7 @@ import { AppModule } from './app.module';
 import express = require('express');
 import fs = require('fs');
 import { CONFIG } from './config';
+import cookieParser = require('cookie-parser');
 
 async function bootstrap() {
   const expressApp: Express = express();
@@ -23,6 +24,7 @@ async function bootstrap() {
     new ExpressAdapter(expressApp),
   );
   app.useStaticAssets(join(__dirname, '..', 'rosplata'));
+  app.use(cookieParser());
 
   await app.init();
   await server.listen(process.env.PORT || 443);

@@ -1,10 +1,10 @@
 {
   "name": "rosplata-back",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "author": "",
   "private": false,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
@@ -15,7 +15,10 @@
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "migrate": "sequelize db:migrate",
-    "unmigrate": "sequelize db:migrate:undo"
+    "unmigrate": "sequelize db:migrate:undo",
+    "translations:generate": "node ./scripts/generate-translations.js",
+    "translations:apply": "node ./scripts/apply-translations.js",
+    "translations:add": "node ./scripts/add-translation.js"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
@@ -23,9 +26,12 @@
     "@nestjs/passport": "^9.0.0",
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/sequelize": "^9.0.0",
+    "@types/cookie-parser": "^1.4.3",
     "class-transformer": "^0.5.1",
     "compression": "^1.7.4",
+    "cookie-parser": "^1.4.6",
     "firebase-admin": "^11.4.0",
+    "jsdom": "^21.1.1",
     "mysql2": "^2.3.3",
     "passport": "^0.6.0",
     "passport-firebase-jwt": "^1.2.1",

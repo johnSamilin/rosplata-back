@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { CONFIG } from './config';
+import { supportedLangs } from './langs';
 
 import path = require('path');
 
@@ -28,22 +29,22 @@ export class AppController {
   stubGet(@Res() res: Response) {
     res.send(HttpStatus.NOT_FOUND);
   }
-  
+
   @Post('/api/*')
   stubPost(@Res() res: Response) {
     res.send(HttpStatus.NOT_FOUND);
   }
-  
+
   @Patch('/api/*')
   stubPatch(@Res() res: Response) {
     res.send(HttpStatus.NOT_FOUND);
   }
-  
+
   @Put('/api/*')
   stubPut(@Res() res: Response) {
     res.send(HttpStatus.NOT_FOUND);
   }
-  
+
   @Delete('/api/*')
   stubDelete(@Res() res: Response) {
     res.send(HttpStatus.NOT_FOUND);
@@ -51,6 +52,28 @@ export class AppController {
 
   @Get('*')
   notfound(@Req() req: Request, @Res() res: Response): void {
-    res.sendFile(path.resolve('./rosplata/_index.html'));
+    let preferredLang;
+    const cookieLang = req.cookies.lang;
+    if (cookieLang && supportedLangs.includes(cookieLang)) {
+      preferredLang = cookieLang;
+    } else {
+      const langs = req.headers['accept-language']
+        ?.split(',')
+        .map((lang) => lang.split(';')[0])
+        .map((lang) => lang.split('-')[0]);
+
+      preferredLang = langs.find((lang) => supportedLangs.includes(lang));
+    }
+    console.log('language', {
+      accept: req.headers['accept-language'],
+      preferredLang,
+    });
+    res.sendFile(
+      path.resolve(
+        preferredLang && preferredLang !== 'en'
+          ? `./rosplata/translations/generated/${preferredLang}.html`
+          : './rosplata/_index.html',
+      ),
+    );
   }
 }

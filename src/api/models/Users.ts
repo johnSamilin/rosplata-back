@@ -18,6 +18,9 @@ export class Users extends Model {
   @Column
   picture: string;
 
+  @Column
+  lang: string;
+
   @HasMany(() => Transactions)
   transactions: Transactions[];
 }
