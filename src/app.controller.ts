@@ -70,7 +70,7 @@ export class AppController {
     });
     res.sendFile(
       path.resolve(
-        preferredLang
+        preferredLang && preferredLang !== 'en'
           ? `./rosplata/translations/generated/${preferredLang}.html`
           : './rosplata/_index.html',
       ),
