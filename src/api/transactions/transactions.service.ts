@@ -90,4 +90,26 @@ export class TransactionsService {
 
     throw new Error('You are not approved participant nor budget owner');
   }
+
+  async changeDeletionStatus(
+    id: string,
+    userId: string,
+    isDeleted = true,
+  ): Promise<[affectedRows: number]> {
+    return await this.transactions.update(
+      {
+        deleted: isDeleted,
+      },
+      {
+        where: {
+          id: {
+            [Op.eq]: id,
+          },
+          ownerId: {
+            [Op.eq]: userId,
+          },
+        },
+      },
+    );
+  }
 }

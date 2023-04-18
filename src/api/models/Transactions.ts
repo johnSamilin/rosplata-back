@@ -10,6 +10,7 @@ import {
 import { Budgets } from './Budgets';
 import { CURRENCIES } from './constants';
 import { Users } from './Users';
+import { BOOLEAN } from 'sequelize';
 
 @Table({
   tableName: 'transactions'
@@ -44,4 +45,7 @@ export class Transactions extends Model {
 
   @Column(TEXT)
   comment: string;
+
+  @Column(BOOLEAN)
+  deleted: boolean;
 }

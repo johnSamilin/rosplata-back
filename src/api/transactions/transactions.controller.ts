@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Param,
@@ -60,6 +61,50 @@ export class TransactionsController {
       res.status(HttpStatus.CREATED).send({ id: transaction.id });
     } catch (error) {
       res.status(HttpStatus.BAD_REQUEST).send({ error: error.message });
+    }
+  }
+
+  @Delete(':transactionId')
+  async delete(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Param('transactionId') id,
+  ) {
+    // @ts-ignore
+    const user = req.user;
+    const [rowsCount] = await this.transactionsService.changeDeletionStatus(
+      id,
+      user.uid,
+      true
+    );
+    if (rowsCount === 0) {
+      res
+        .status(HttpStatus.FORBIDDEN)
+        .send({ error: "This ain't your transaction, man" });
+    } else {
+      res.status(HttpStatus.OK).send({ id });
+    }
+  }
+
+  @Post(':transactionId/restore')
+  async restore(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Param('transactionId') id,
+  ) {
+    // @ts-ignore
+    const user = req.user;
+    const [rowsCount] = await this.transactionsService.changeDeletionStatus(
+      id,
+      user.uid,
+      false
+    );
+    if (rowsCount === 0) {
+      res
+        .status(HttpStatus.FORBIDDEN)
+        .send({ error: "This ain't your transaction, man" });
+    } else {
+      res.status(HttpStatus.OK).send({ id });
     }
   }
 }
