@@ -128,6 +128,7 @@ export class BudgetsService {
     name: string,
     currency: ICURRENCIES,
     userId: string,
+    initialParticipants: string[] = [],
   ) {
     const newBudget = await this.budgets.create({
       id,
@@ -136,11 +137,18 @@ export class BudgetsService {
       currency,
     });
 
-    await this.participants.create({
-      userId,
-      budgetId: newBudget.id,
-      status: PARTICIPANT_STATUSES.OWNER,
-    });
+    await this.participants.bulkCreate([
+      {
+        userId,
+        budgetId: newBudget.id,
+        status: PARTICIPANT_STATUSES.OWNER,
+      },
+      ...initialParticipants.map((userId) => ({
+        userId,
+        budgetId: newBudget.id,
+        status: PARTICIPANT_STATUSES.INVITED,
+      })),
+    ]);
 
     return newBudget;
   }

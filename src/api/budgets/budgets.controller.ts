@@ -92,6 +92,7 @@ export class BudgetsController {
       filterXSS(body.name),
       body.currency,
       user.uid,
+      body.suggestedParticipants,
     );
 
     res.status(HttpStatus.CREATED).send({ id: newBudget.id });
