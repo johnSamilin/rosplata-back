@@ -6,7 +6,7 @@ import { Transactions } from '../models/Transactions';
 import { Users } from '../models/Users';
 import { Participants, PARTICIPANT_STATUSES } from '../models/Participants';
 import { allowedUserStatuses } from './budgets.controller';
-import { ICURRENCIES } from '../models/constants';
+import { IBUDGETTYPES, ICURRENCIES } from '../models/constants';
 
 @Injectable()
 export class BudgetsService {
@@ -126,6 +126,7 @@ export class BudgetsService {
   async create(
     id: string,
     name: string,
+    type: IBUDGETTYPES,
     currency: ICURRENCIES,
     userId: string,
     initialParticipants: string[] = [],
@@ -135,6 +136,7 @@ export class BudgetsService {
       name,
       userId,
       currency,
+      type,
     });
 
     await this.participants.bulkCreate([
@@ -153,11 +155,17 @@ export class BudgetsService {
     return newBudget;
   }
 
-  addParticipant(budgetId: string, userId: string) {
+  async addParticipant(budgetId: string, userId: string) {
+    const budget = await this.budgets.findByPk(budgetId, {
+      attributes: ['type'],
+    });
     return this.participants.create({
       userId,
       budgetId,
-      status: PARTICIPANT_STATUSES.WAITING_APPROVAL,
+      status:
+        budget.type === 'open'
+          ? PARTICIPANT_STATUSES.ACTIVE
+          : PARTICIPANT_STATUSES.WAITING_APPROVAL,
     });
   }
 

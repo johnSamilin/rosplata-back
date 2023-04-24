@@ -65,6 +65,8 @@ export class BudgetsController {
           id: budgetModel.id,
           name: budgetModel.name,
           participantsCount: budgetModel.participants.length,
+          type: budgetModel.type,
+          currency: budgetModel.currency,
           sum: budgetModel.transactions.reduce((acc, t) => {
             //@ts-ignore
             acc += parseFloat(t.amount);
@@ -87,9 +89,11 @@ export class BudgetsController {
       });
       return;
     }
+    const type = body.isOpen === 'on' ? 'open' : 'private';
     const newBudget = await this.budgetsService.create(
       body.id,
       filterXSS(body.name),
+      type,
       body.currency,
       user.uid,
       body.suggestedParticipants,
@@ -121,11 +125,9 @@ export class BudgetsController {
 
       return;
     }
-    await this.budgetsService.addParticipant(id, user.uid);
+    const result = await this.budgetsService.addParticipant(id, user.uid);
 
-    res
-      .status(HttpStatus.OK)
-      .send({ newStatus: PARTICIPANT_STATUSES.WAITING_APPROVAL });
+    res.status(HttpStatus.OK).send({ newStatus: result.status });
   }
 
   /**
