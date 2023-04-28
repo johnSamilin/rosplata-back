@@ -226,4 +226,27 @@ export class BudgetsController {
 
     res.status(HttpStatus.OK).send({ newStatus: body.status });
   }
+
+  @Post(':id/settings')
+  @UseInterceptors(FileInterceptor('body'))
+  async changeSettings(
+    @Param('id') budgetId,
+    @Body() body,
+    @Res() res: Response,
+    @Req() req: Request,
+  ) {
+    // @ts-ignore
+    const user = req.user;
+    const budget = await this.budgetsService.get(budgetId);
+    if (user.uid !== budget.userId) {
+      res
+        .status(HttpStatus.BAD_REQUEST)
+        .send({ error: 'You are not an owner' });
+
+      return;
+    }
+    await this.budgetsService.changeSettings(budgetId, user.uid, body.opened);
+
+    res.status(HttpStatus.OK).send({ ok: true });
+  }
 }

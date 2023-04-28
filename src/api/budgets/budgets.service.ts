@@ -190,4 +190,22 @@ export class BudgetsService {
       },
     );
   }
+
+  async changeSettings(id: string, userId: string, isOpen: boolean) {
+    return this.budgets.update(
+      {
+        type: isOpen ? 'open' : 'private',
+      },
+      {
+        where: {
+          userId: {
+            [Op.eq]: userId,
+          },
+          id: {
+            [Op.eq]: id,
+          },
+        },
+      },
+    );
+  }
 }
