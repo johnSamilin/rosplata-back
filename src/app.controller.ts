@@ -62,7 +62,7 @@ export class AppController {
         .map((lang) => lang.split(';')[0])
         .map((lang) => lang.split('-')[0]);
 
-      preferredLang = langs.find((lang) => supportedLangs.includes(lang));
+      preferredLang = langs?.find((lang) => supportedLangs.includes(lang));
     }
     console.log('language', {
       accept: req.headers['accept-language'],
