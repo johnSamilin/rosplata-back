@@ -37,11 +37,14 @@ export class Budgets extends Model {
   @Column(ENUM(...CURRENCIES))
   currency: string;
 
+  @Column(ENUM('open', 'private'))
+  type: string;
+
   currentUserStatus?: number;
 }
 
 export interface BudgetsShort
-  extends Pick<Budgets, 'id' | 'name' | 'currentUserStatus'> {
+  extends Pick<Budgets, 'id' | 'name' | 'currentUserStatus' | 'type'> {
   participantsCount: number;
   sum: number;
 }

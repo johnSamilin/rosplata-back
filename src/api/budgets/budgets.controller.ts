@@ -65,6 +65,8 @@ export class BudgetsController {
           id: budgetModel.id,
           name: budgetModel.name,
           participantsCount: budgetModel.participants.length,
+          type: budgetModel.type,
+          currency: budgetModel.currency,
           sum: budgetModel.transactions.reduce((acc, t) => {
             //@ts-ignore
             acc += parseFloat(t.amount);
@@ -87,9 +89,11 @@ export class BudgetsController {
       });
       return;
     }
+    const type = body.isOpen === 'on' ? 'open' : 'private';
     const newBudget = await this.budgetsService.create(
       body.id,
       filterXSS(body.name),
+      type,
       body.currency,
       user.uid,
       body.suggestedParticipants,
@@ -121,11 +125,9 @@ export class BudgetsController {
 
       return;
     }
-    await this.budgetsService.addParticipant(id, user.uid);
+    const result = await this.budgetsService.addParticipant(id, user.uid);
 
-    res
-      .status(HttpStatus.OK)
-      .send({ newStatus: PARTICIPANT_STATUSES.WAITING_APPROVAL });
+    res.status(HttpStatus.OK).send({ newStatus: result.status });
   }
 
   /**
@@ -223,5 +225,28 @@ export class BudgetsController {
     );
 
     res.status(HttpStatus.OK).send({ newStatus: body.status });
+  }
+
+  @Post(':id/settings')
+  @UseInterceptors(FileInterceptor('body'))
+  async changeSettings(
+    @Param('id') budgetId,
+    @Body() body,
+    @Res() res: Response,
+    @Req() req: Request,
+  ) {
+    // @ts-ignore
+    const user = req.user;
+    const budget = await this.budgetsService.get(budgetId);
+    if (user.uid !== budget.userId) {
+      res
+        .status(HttpStatus.BAD_REQUEST)
+        .send({ error: 'You are not an owner' });
+
+      return;
+    }
+    await this.budgetsService.changeSettings(budgetId, user.uid, body.opened);
+
+    res.status(HttpStatus.OK).send({ ok: true });
   }
 }
