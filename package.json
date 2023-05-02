@@ -1,6 +1,6 @@
 {
   "name": "rosplata-back",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "",
   "author": "",
   "private": false,
@@ -42,6 +42,7 @@
     "sequelize": "^6.26.0",
     "sequelize-typescript": "^2.1.5",
     "spdy": "^4.0.2",
+    "ua-parser-js": "^1.0.35",
     "xss": "^1.0.14"
   },
   "devDependencies": {
