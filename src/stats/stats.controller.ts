@@ -30,9 +30,9 @@ export class StatsController {
     uas.forEach((rawUa) => {
       const ua = uap(rawUa.value);
       const bName = ua.browser.name;
-      const bVer = ua.browser.version || 'unknown version';
+      const bVer = ua.browser.major || 'unknown version';
       const osName = ua.os.name;
-      const osVer = ua.os.major || 'unknown version';
+      const osVer = ua.os.version || 'unknown version';
       if (bName) {
         if (!(bName in uasMap.browser)) {
           uasMap.browser[bName] = {};
