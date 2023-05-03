@@ -39,7 +39,7 @@ export class UsersController {
           .map((lang) => lang.split(';')[0])
           .map((lang) => lang.split('-')[0]);
 
-        lang = langs.find((lang) => supportedLangs.includes(lang));
+        lang = langs?.find((lang) => supportedLangs.includes(lang));
       }
     } catch (er) {
       console.error('Error while upserting user', er);
