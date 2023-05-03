@@ -29,20 +29,28 @@ export class StatsController {
     });
     uas.forEach((rawUa) => {
       const ua = uap(rawUa.value);
-      if (!(ua.browser.name in uasMap.browser)) {
-        uasMap.browser[ua.browser.name] = {};
+      const bName = ua.browser.name;
+      const bVer = ua.browser.version || 'unknown version';
+      const osName = ua.os.name;
+      const osVer = ua.os.major || 'unknown version';
+      if (bName) {
+        if (!(bName in uasMap.browser)) {
+          uasMap.browser[bName] = {};
+        }
+        if (!(bVer in uasMap.browser[bName])) {
+          uasMap.browser[bName][bVer] = 0;
+        }
+        uasMap.browser[bName][bVer] += 1;
       }
-      if (!(ua.browser.version in uasMap.browser[ua.browser.name])) {
-        uasMap.browser[ua.browser.name][ua.browser.version] = 0;
+      if (osName) {
+        if (!(osName in uasMap.os)) {
+          uasMap.os[osName] = {};
+        }
+        if (!(osVer in uasMap.os[osName])) {
+          uasMap.os[osName][osVer] = 0;
+        }
+        uasMap.os[osName][osVer] += 1;
       }
-      if (!(ua.os.name in uasMap.os)) {
-        uasMap.os[ua.os.name] = {};
-      }
-      if (!(ua.os.version in uasMap.os[ua.os.name])) {
-        uasMap.os[ua.os.name][ua.os.version] = 0;
-      }
-      uasMap.browser[ua.browser.name][ua.browser.version] += 1;
-      uasMap.os[ua.os.name][ua.os.version] += 1;
     });
 
     res.send({ langsMap, uasMap });
