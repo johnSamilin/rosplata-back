@@ -6,7 +6,7 @@ module.exports = {
     const transaction = await queryInterface.sequelize.transaction();
     try {
       await queryInterface.createTable(
-        'stats',
+        'Stats',
         {
           id: {
             type: Sequelize.INTEGER,
@@ -40,7 +40,7 @@ module.exports = {
   async down(queryInterface, Sequelize) {
     const transaction = await queryInterface.sequelize.transaction();
     try {
-      await queryInterface.dropTable('stats', {
+      await queryInterface.dropTable('Stats', {
         transaction,
       });
       transaction.commit();
