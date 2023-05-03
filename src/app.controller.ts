@@ -15,10 +15,11 @@ import { CONFIG } from './config';
 import { supportedLangs } from './langs';
 
 import path = require('path');
+import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
-  constructor() {}
+  constructor(private appService: AppService) {}
 
   @Get('.well-known/acme-challenge/:key')
   letsencrypt(@Param('key') key) {
@@ -50,10 +51,16 @@ export class AppController {
     res.send(HttpStatus.NOT_FOUND);
   }
 
+  @Get('about')
+  about(@Res() res: Response) {
+    res.sendFile(path.resolve('./rosplata/about.html'));
+  }
+
   @Get('*')
   notfound(@Req() req: Request, @Res() res: Response): void {
     let preferredLang;
     const cookieLang = req.cookies.lang;
+    const amIKnowYou = 'amIKnowYou' in req.cookies;
     if (cookieLang && supportedLangs.includes(cookieLang)) {
       preferredLang = cookieLang;
     } else {
@@ -64,10 +71,18 @@ export class AppController {
 
       preferredLang = langs?.find((lang) => supportedLangs.includes(lang));
     }
-    console.log('language', {
-      accept: req.headers['accept-language'],
-      preferredLang,
-    });
+  
+    if (!amIKnowYou) {
+      this.appService.log('lang', req.headers['accept-language']);
+      this.appService.log('useragent', req.headers['user-agent']);
+      res.cookie('amIKnowYou', 'ofCourseYouDo', {
+        expires: new Date(new Date().getTime() + 365 * 24 * 3600 * 1000),
+        sameSite: 'strict',
+        httpOnly: true,
+        path: '/',
+      });
+    }
+
     res.sendFile(
       path.resolve(
         preferredLang && preferredLang !== 'en'

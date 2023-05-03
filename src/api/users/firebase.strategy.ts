@@ -26,7 +26,7 @@ export class FirebaseAuthStrategy extends PassportStrategy(
       .auth()
       .verifyIdToken(token, true)
       .catch((err) => {
-        console.log('Failed to check authentication', err);
+        // console.log('Failed to check authentication', err);
         throw new UnauthorizedException("We don't know you. You have to login");
       });
     if (!firebaseUser) {
