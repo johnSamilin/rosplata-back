@@ -2,10 +2,11 @@ import { Controller, Get, Res } from '@nestjs/common';
 import { StatsService } from './stats.service';
 import { Response } from 'express';
 import * as uap from 'ua-parser-js';
+import isbot = require('isbot');
 
 @Controller('api/stats')
 export class StatsController {
-  constructor(private statsService: StatsService) { }
+  constructor(private statsService: StatsService) {}
 
   @Get('')
   async all(@Res() res: Response) {
@@ -27,31 +28,33 @@ export class StatsController {
       }
       langsMap[lang] += 1;
     });
-    uas.forEach((rawUa) => {
-      const ua = uap(rawUa.value);
-      const bName = ua.browser.name;
-      const bVer = ua.browser.major || 'unknown version';
-      const osName = ua.os.name;
-      const osVer = ua.os.version || 'unknown version';
-      if (bName) {
-        if (!(bName in uasMap.browser)) {
-          uasMap.browser[bName] = {};
+    uas
+      .filter((ua) => !isbot(ua))
+      .forEach((rawUa) => {
+        const ua = uap(rawUa.value);
+        const bName = ua.browser.name;
+        const bVer = ua.browser.major || 'unknown version';
+        const osName = ua.os.name;
+        const osVer = ua.os.version || 'unknown version';
+        if (bName) {
+          if (!(bName in uasMap.browser)) {
+            uasMap.browser[bName] = {};
+          }
+          if (!(bVer in uasMap.browser[bName])) {
+            uasMap.browser[bName][bVer] = 0;
+          }
+          uasMap.browser[bName][bVer] += 1;
         }
-        if (!(bVer in uasMap.browser[bName])) {
-          uasMap.browser[bName][bVer] = 0;
+        if (osName) {
+          if (!(osName in uasMap.os)) {
+            uasMap.os[osName] = {};
+          }
+          if (!(osVer in uasMap.os[osName])) {
+            uasMap.os[osName][osVer] = 0;
+          }
+          uasMap.os[osName][osVer] += 1;
         }
-        uasMap.browser[bName][bVer] += 1;
-      }
-      if (osName) {
-        if (!(osName in uasMap.os)) {
-          uasMap.os[osName] = {};
-        }
-        if (!(osVer in uasMap.os[osName])) {
-          uasMap.os[osName][osVer] = 0;
-        }
-        uasMap.os[osName][osVer] += 1;
-      }
-    });
+      });
 
     res.send({ langsMap, uasMap });
   }
