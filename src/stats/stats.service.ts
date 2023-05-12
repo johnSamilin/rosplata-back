@@ -16,6 +16,9 @@ export class StatsService {
         eventType: {
           [Op.eq]: 'lang',
         },
+        requestId: {
+          [Op.eq]: null
+        }
       },
     });
   }
@@ -26,7 +29,33 @@ export class StatsService {
         eventType: {
           [Op.eq]: 'useragent',
         },
+        requestId: {
+          [Op.eq]: null
+        }
       },
+    });
+  }
+
+  log(eventType: string, value: string) {
+    if (value) {
+      this.stats.create({
+        eventType,
+        value,
+      });
+    }
+  }
+
+  logError(text, clientId, ua) {
+    const reqId = clientId ?? `${Date.now()}.${Math.random()}`;
+    this.stats.create({
+      eventType: 'error',
+      value: text,
+      requestId: reqId,
+    });
+    this.stats.create({
+      eventType: 'useragent',
+      value: ua,
+      requestId: reqId,
     });
   }
 }
