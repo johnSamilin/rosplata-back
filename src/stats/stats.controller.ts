@@ -64,7 +64,11 @@ export class StatsController {
   @UseInterceptors(FileInterceptor('body'))
   async error(@Body() body, @Req() req: Request, @Res() res: Response) {
     if (body.error) {
-      this.statsService.logError(body.error, body.clientId, req.headers['user-agent']);
+      this.statsService.logError(
+        body.error,
+        body.clientId,
+        req.headers['user-agent'],
+      );
       res.sendStatus(HttpStatus.CREATED);
     } else {
       res.sendStatus(HttpStatus.BAD_REQUEST);

@@ -8,7 +8,7 @@ export class StatsService {
   constructor(
     @InjectModel(Stats)
     private stats: typeof Stats,
-  ) {}
+  ) { }
 
   getLangs() {
     return this.stats.findAll({
@@ -22,7 +22,7 @@ export class StatsService {
       },
     });
   }
-  
+
   getUa() {
     return this.stats.findAll({
       where: {
@@ -52,10 +52,12 @@ export class StatsService {
       value: text,
       requestId: reqId,
     });
-    this.stats.create({
-      eventType: 'useragent',
-      value: ua,
-      requestId: reqId,
+    this.stats.findOrCreate({
+      where: {
+        eventType: 'useragent',
+        value: ua,
+        requestId: reqId,
+      },
     });
   }
 }
