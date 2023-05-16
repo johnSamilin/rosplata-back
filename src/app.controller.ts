@@ -15,11 +15,11 @@ import { CONFIG } from './config';
 import { supportedLangs } from './langs';
 
 import path = require('path');
-import { AppService } from './app.service';
+import { StatsService } from './stats/stats.service';
 
 @Controller()
 export class AppController {
-  constructor(private appService: AppService) {}
+  constructor(private statsService: StatsService) {}
 
   @Get('.well-known/acme-challenge/:key')
   letsencrypt(@Param('key') key) {
@@ -73,8 +73,8 @@ export class AppController {
     }
   
     if (!amIKnowYou) {
-      this.appService.log('lang', req.headers['accept-language']);
-      this.appService.log('useragent', req.headers['user-agent']);
+      this.statsService.log('lang', req.headers['accept-language']);
+      this.statsService.log('useragent', req.headers['user-agent']);
       res.cookie('amIKnowYou', 'ofCourseYouDo', {
         expires: new Date(new Date().getTime() + 365 * 24 * 3600 * 1000),
         sameSite: 'strict',
