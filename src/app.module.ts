@@ -32,8 +32,6 @@ const env = CONFIG.IS_DEV ? 'development' : 'production';
 @Module({
   imports: [
     SequelizeModule.forRoot(configs[env]),
-    HttpMiddleware,
-    EarlyHintsMiddleware,
     SequelizeModule.forFeature([
       Budgets,
       Users,

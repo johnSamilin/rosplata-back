@@ -1,8 +1,9 @@
-import { Controller, Get, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, Req, Res, UseInterceptors } from '@nestjs/common';
 import { StatsService } from './stats.service';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import * as uap from 'ua-parser-js';
 import isbot = require('isbot');
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('api/stats')
 export class StatsController {
@@ -29,7 +30,7 @@ export class StatsController {
       langsMap[lang] += 1;
     });
     uas
-      .filter((ua) => !isbot(ua))
+      .filter((ua) => !isbot(ua.value))
       .forEach((rawUa) => {
         const ua = uap(rawUa.value);
         const bName = ua.browser.name;
@@ -57,5 +58,20 @@ export class StatsController {
       });
 
     res.send({ langsMap, uasMap });
+  }
+
+  @Post('error')
+  @UseInterceptors(FileInterceptor('body'))
+  async error(@Body() body, @Req() req: Request, @Res() res: Response) {
+    if (body.error) {
+      this.statsService.logError(
+        body.error,
+        body.clientId,
+        req.headers['user-agent'],
+      );
+      res.sendStatus(HttpStatus.CREATED);
+    } else {
+      res.sendStatus(HttpStatus.BAD_REQUEST);
+    }
   }
 }

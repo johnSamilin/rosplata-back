@@ -16,9 +16,12 @@ export class Stats extends Model {
   @Column
   id: number;
 
-  @Column(ENUM('lang', 'useragent'))
+  @Column(ENUM('lang', 'useragent', 'error'))
   eventType: string;
 
   @Column
   value: string;
+
+  @Column
+  requestId: string;
 }
