@@ -103,7 +103,7 @@ export class TransactionsService {
       {
         where: {
           id: {
-            [Op.eq]: id + 'foo',
+            [Op.eq]: id,
           },
           ownerId: {
             [Op.eq]: userId,
