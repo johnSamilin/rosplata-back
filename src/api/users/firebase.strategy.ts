@@ -22,6 +22,11 @@ export class FirebaseAuthStrategy extends PassportStrategy(
   }
 
   async validate(token: string) {
+    if (token === 'demoaccount') {
+      return {
+        uid: CONFIG.DEMO_UID,
+      };
+    }
     const firebaseUser: any = await this.defaultApp
       .auth()
       .verifyIdToken(token, true)

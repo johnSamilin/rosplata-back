@@ -38,6 +38,14 @@ const preloadMap = {
     '/src/containers/BudgetListItem/BudgetListItem.mjs',
     '/src/containers/BudgetListItem/BudgetListItem.css',
   ],
+  '\\/demo': [
+    '/src/layouts/Main/MainLayout.mjs',
+    '/src/layouts/Main/MainLayout.css',
+    '/src/containers/BudgetList/BudgetList.mjs',
+    '/src/containers/BudgetList/BudgetList.css',
+    '/src/containers/BudgetListItem/BudgetListItem.mjs',
+    '/src/containers/BudgetListItem/BudgetListItem.css',
+  ],
   '\\/budgets\\/([-\\da-zA-Z]+)': [
     '/src/layouts/Main/MainLayout.mjs',
     '/src/layouts/Main/MainLayout.css',
