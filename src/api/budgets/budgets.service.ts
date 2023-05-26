@@ -134,6 +134,7 @@ export class BudgetsService {
     currency: ICURRENCIES,
     userId: string,
     initialParticipants: string[] = [],
+    bannedUserTransactionsAction: IBANNEDUSERTRANSACTIONSACTIONS,
   ) {
     const newBudget = await this.budgets.create({
       id,
@@ -141,6 +142,7 @@ export class BudgetsService {
       userId,
       currency,
       type,
+      bannedUserTransactionsAction,
     });
 
     await this.participants.bulkCreate([

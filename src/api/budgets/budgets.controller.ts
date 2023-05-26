@@ -97,6 +97,7 @@ export class BudgetsController {
       body.currency,
       user.uid,
       body.suggestedParticipants,
+      body.bannedUserTransactionsAction,
     );
 
     res.status(HttpStatus.CREATED).send({ id: newBudget.id });
