@@ -40,6 +40,9 @@ export class Budgets extends Model {
   @Column(ENUM('open', 'private'))
   type: string;
 
+  @Column(ENUM('keep', 'ignore'))
+  bannedUserTransactionsAction: string;
+
   currentUserStatus?: number;
 }
 

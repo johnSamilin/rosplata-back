@@ -6,7 +6,11 @@ import { Transactions } from '../models/Transactions';
 import { Users } from '../models/Users';
 import { Participants, PARTICIPANT_STATUSES } from '../models/Participants';
 import { allowedUserStatuses } from './budgets.controller';
-import { IBUDGETTYPES, ICURRENCIES } from '../models/constants';
+import {
+  IBANNEDUSERTRANSACTIONSACTIONS,
+  IBUDGETTYPES,
+  ICURRENCIES,
+} from '../models/constants';
 
 @Injectable()
 export class BudgetsService {
@@ -130,6 +134,7 @@ export class BudgetsService {
     currency: ICURRENCIES,
     userId: string,
     initialParticipants: string[] = [],
+    bannedUserTransactionsAction: IBANNEDUSERTRANSACTIONSACTIONS,
   ) {
     const newBudget = await this.budgets.create({
       id,
@@ -137,6 +142,7 @@ export class BudgetsService {
       userId,
       currency,
       type,
+      bannedUserTransactionsAction,
     });
 
     await this.participants.bulkCreate([
@@ -191,10 +197,20 @@ export class BudgetsService {
     );
   }
 
-  async changeSettings(id: string, userId: string, isOpen: boolean) {
+  async changeSettings(
+    id: string,
+    userId: string,
+    name: string,
+    currency: ICURRENCIES,
+    isOpen: boolean,
+    bannedUserTransactionsAction: IBANNEDUSERTRANSACTIONSACTIONS,
+  ) {
     return this.budgets.update(
       {
         type: isOpen ? 'open' : 'private',
+        name,
+        currency,
+        bannedUserTransactionsAction,
       },
       {
         where: {

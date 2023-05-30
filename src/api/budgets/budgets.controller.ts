@@ -97,6 +97,7 @@ export class BudgetsController {
       body.currency,
       user.uid,
       body.suggestedParticipants,
+      body.bannedUserTransactionsAction,
     );
 
     res.status(HttpStatus.CREATED).send({ id: newBudget.id });
@@ -245,7 +246,14 @@ export class BudgetsController {
 
       return;
     }
-    await this.budgetsService.changeSettings(budgetId, user.uid, body.opened);
+    await this.budgetsService.changeSettings(
+      budgetId,
+      user.uid,
+      body.name,
+      body.currency,
+      body.isOpen === 'on',
+      body.bannedUserTransactionsAction,
+    );
 
     res.status(HttpStatus.OK).send({ ok: true });
   }
