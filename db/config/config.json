@@ -4,11 +4,12 @@
     "password": "mysql",
     "database": "rosplata",
     "host": "127.0.0.1",
-    "dialect": "mysql",
+    "dialect": "sqlite",
     "autoLoadModels": true,
     "retryAttempts": 3,
     "synchronize": true,
-    "logging": true
+    "logging": false,
+    "storage": "./db.sqlite3"
   },
   "production": {
     "username": "mysql",
