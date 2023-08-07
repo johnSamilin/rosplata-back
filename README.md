@@ -9,13 +9,13 @@ To start up, run these commands:
 - `npm i`
 - Generate SSL certificates
 - Edit config file
-- Setup DB
+- Setup DB (or don't, sqlite is already set up)
 - Run migrations
 - `npm run start:dev` (or `npm run build` and `npm run start:prod` for production)
 
 ### Generate certificates
 #### Development
-Generate certificates for development purposes ([see this article](https://web.dev/how-to-use-local-https/)), name them accordingly (`test.crt`, `test.pem`) and place them to the root of the project.
+Generate certificates for development purposes ([see this article](https://web.dev/how-to-use-local-https/)), name them accordingly (`test.crt`, `test.key`) and place them to the root of the project.
 
 #### Production
 Generate certificates for production purposes ([with certbot](https://certbot.eff.org/)), name them accordingly (`privkey.pem`, `fullchain.pem`) and place them to the root of the project.
