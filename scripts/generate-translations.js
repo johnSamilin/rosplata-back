@@ -35,5 +35,5 @@ langs.forEach((lang) => {
       });
     }
   } catch (er) {}
-  fs.writeFileSync(path, JSON.stringify(translation));
+  fs.writeFileSync(path, JSON.stringify(translation, null, 4));
 });
