@@ -17,9 +17,17 @@ import { supportedLangs } from './langs';
 import path = require('path');
 import { StatsService } from './stats/stats.service';
 
+const fs = require('fs');
+
 @Controller()
 export class AppController {
-  constructor(private statsService: StatsService) {}
+  constructor(private statsService: StatsService) { }
+  
+  @Get('version')
+  version(@Res() res: Response) {
+    const pack = JSON.parse(fs.readFileSync('./package.json').toString());
+    res.json({ version: pack.version });
+  }
 
   @Get('.well-known/acme-challenge/:key')
   letsencrypt(@Param('key') key) {
@@ -71,7 +79,7 @@ export class AppController {
 
       preferredLang = langs?.find((lang) => supportedLangs.includes(lang));
     }
-  
+
     if (!amIKnowYou) {
       this.statsService.log('lang', req.headers['accept-language']);
       this.statsService.log('useragent', req.headers['user-agent']);
