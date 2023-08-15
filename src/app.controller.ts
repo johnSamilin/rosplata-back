@@ -64,6 +64,11 @@ export class AppController {
     res.sendFile(path.resolve('./rosplata/about.html'));
   }
 
+  @Get('images/:platform/:name')
+  icons(@Param('platform') platform, @Param('name') name, @Res() res: Response) {
+    res.sendFile(path.resolve(`./rosplata/src/images/${platform}/${name}`));
+  }
+
   @Get('*')
   notfound(@Req() req: Request, @Res() res: Response): void {
     let preferredLang;
