@@ -50,7 +50,7 @@ export class TransactionsController {
       return;
     }
     try {
-      const transaction = await this.transactionsService.create(
+      const [transaction, created] = await this.transactionsService.upsert(
         body.id,
         budgetId,
         user.uid,
@@ -58,7 +58,9 @@ export class TransactionsController {
         body.currency,
         filterXSS(body.comment),
       );
-      res.status(HttpStatus.CREATED).send({ id: transaction.id });
+      res
+        .status(created ? HttpStatus.CREATED : HttpStatus.OK)
+        .send(transaction);
     } catch (error) {
       res.status(HttpStatus.BAD_REQUEST).send({ error: error.message });
     }

@@ -78,7 +78,7 @@ export class BudgetsController {
     return budget;
   }
 
-  @Put('')
+  @Post('')
   @UseInterceptors(FileInterceptor('body'))
   async create(@Body() body, @Res() res: Response, @Req() req: Request) {
     // @ts-ignore
@@ -90,7 +90,7 @@ export class BudgetsController {
       return;
     }
     const type = body.isOpen === 'on' ? 'open' : 'private';
-    const newBudget = await this.budgetsService.create(
+    const newBudget = await this.budgetsService.upsert(
       body.id,
       filterXSS(body.name),
       type,
@@ -100,14 +100,14 @@ export class BudgetsController {
       body.bannedUserTransactionsAction,
     );
 
-    res.status(HttpStatus.CREATED).send({ id: newBudget.id });
+    res.status(HttpStatus.CREATED).send(newBudget);
   }
 
   /**
    * Ask for participation
    * @param id
    */
-  @Put(':id/participant/invite')
+  @Post(':id/participant/invite')
   async sendParticipationRequest(
     @Param('id') id,
     @Res() res: Response,
