@@ -127,7 +127,7 @@ export class BudgetsService {
     return budget;
   }
 
-  async create(
+  async upsert(
     id: string,
     name: string,
     type: IBUDGETTYPES,
@@ -136,7 +136,7 @@ export class BudgetsService {
     initialParticipants: string[] = [],
     bannedUserTransactionsAction: IBANNEDUSERTRANSACTIONSACTIONS,
   ) {
-    const newBudget = await this.budgets.create({
+    const [newBudget] = await this.budgets.upsert({
       id,
       name,
       userId,

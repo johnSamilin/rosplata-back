@@ -17,9 +17,17 @@ import { supportedLangs } from './langs';
 import path = require('path');
 import { StatsService } from './stats/stats.service';
 
+const fs = require('fs');
+
 @Controller()
 export class AppController {
-  constructor(private statsService: StatsService) {}
+  constructor(private statsService: StatsService) { }
+  
+  @Get('version')
+  version(@Res() res: Response) {
+    const pack = JSON.parse(fs.readFileSync('./package.json').toString());
+    res.json({ version: CONFIG.IS_DEV ? Math.random() : pack.version });
+  }
 
   @Get('.well-known/acme-challenge/:key')
   letsencrypt(@Param('key') key) {
@@ -56,6 +64,11 @@ export class AppController {
     res.sendFile(path.resolve('./rosplata/about.html'));
   }
 
+  @Get('images/:platform/:name')
+  icons(@Param('platform') platform, @Param('name') name, @Res() res: Response) {
+    res.sendFile(path.resolve(`./rosplata/src/images/${platform}/${name}`));
+  }
+
   @Get('*')
   notfound(@Req() req: Request, @Res() res: Response): void {
     let preferredLang;
@@ -71,7 +84,7 @@ export class AppController {
 
       preferredLang = langs?.find((lang) => supportedLangs.includes(lang));
     }
-  
+
     if (!amIKnowYou) {
       this.statsService.log('lang', req.headers['accept-language']);
       this.statsService.log('useragent', req.headers['user-agent']);

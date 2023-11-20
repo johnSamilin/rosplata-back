@@ -53,7 +53,7 @@ export class TransactionsService {
     });
   }
 
-  async create(
+  async upsert(
     id: string,
     budgetId: string,
     ownerId: string,
@@ -78,7 +78,7 @@ export class TransactionsService {
       currentParticipant?.status === PARTICIPANT_STATUSES.ACTIVE ||
       budgetOwner.userId === ownerId
     ) {
-      return this.transactions.create({
+      return this.transactions.upsert({
         id,
         budgetId,
         ownerId,
