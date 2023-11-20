@@ -26,7 +26,7 @@ export class AppController {
   @Get('version')
   version(@Res() res: Response) {
     const pack = JSON.parse(fs.readFileSync('./package.json').toString());
-    res.json({ version: pack.version });
+    res.json({ version: CONFIG.IS_DEV ? Math.random() : pack.version });
   }
 
   @Get('.well-known/acme-challenge/:key')
