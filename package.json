@@ -39,7 +39,7 @@
     "firebase-admin": "^11.4.0",
     "isbot": "^3.6.10",
     "jsdom": "^21.1.1",
-    "mysql2": "^2.3.3",
+    "mysql2": "^3.9.4",
     "passport": "^0.6.0",
     "passport-firebase-jwt": "^1.2.1",
     "reflect-metadata": "^0.1.13",
