@@ -31,8 +31,8 @@ async function bootstrap() {
 
   await app.init();
   if (process.env.USE_NGINX !== '1') {
-    await server.listen(process.env.PORT || 443);
+    await server.listen(process.env.HTTPS_PORT || 443);
   }
-  await app.listen(80);
+  await app.listen(process.env.HTTP_PORT || 80);
 }
 bootstrap();
