@@ -13,11 +13,14 @@ import cookieParser = require('cookie-parser');
 
 async function bootstrap() {
   const expressApp: Express = express();
-  const spdyOpts: ServerOptions = {
-    key: fs.readFileSync(CONFIG.IS_DEV ? './test.key' : './privkey.pem'),
-    cert: fs.readFileSync(CONFIG.IS_DEV ? './test.crt' : './fullchain.pem'),
-  };
-  const server: Server = createServer(spdyOpts, expressApp);
+  let server: Server;
+  if (process.env.USE_NGINX !== '1') {
+    const spdyOpts: ServerOptions = {
+      key: fs.readFileSync(CONFIG.IS_DEV ? './test.key' : './privkey.pem'),
+      cert: fs.readFileSync(CONFIG.IS_DEV ? './test.crt' : './fullchain.pem'),
+    };
+    server = createServer(spdyOpts, expressApp);
+  }
 
   const app = await NestFactory.create<NestExpressApplication>(
     AppModule,
@@ -27,7 +30,9 @@ async function bootstrap() {
   app.use(cookieParser());
 
   await app.init();
-  await server.listen(process.env.PORT || 443);
+  if (process.env.USE_NGINX !== '1') {
+    await server.listen(process.env.PORT || 443);
+  }
   await app.listen(80);
 }
 bootstrap();

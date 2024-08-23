@@ -19,7 +19,7 @@ export class HttpMiddleware implements NestMiddleware {
       res.send(HttpStatus.FORBIDDEN);
       return;
     }
-    if (req.protocol === 'http') {
+    if (req.protocol === 'http' && process.env.USE_NGINX !== '1') {
       res.redirect(
         HttpStatus.PERMANENT_REDIRECT,
         `https://${req.hostname}${req.originalUrl}`,
