@@ -55,6 +55,12 @@ export class AppController {
   about(@Res() res: Response) {
     res.sendFile(path.resolve('./rosplata/about.html'));
   }
+  @Get('lang/:lang')
+  lang(@Res() res: Response, @Param('lang') lang) {
+    res.sendFile(
+      path.resolve(`./rosplata/translations/generated/${lang}.html`),
+    );
+  }
 
   @Get('*')
   notfound(@Req() req: Request, @Res() res: Response): void {
@@ -71,7 +77,7 @@ export class AppController {
 
       preferredLang = langs?.find((lang) => supportedLangs.includes(lang));
     }
-  
+
     if (!amIKnowYou) {
       this.statsService.log('lang', req.headers['accept-language']);
       this.statsService.log('useragent', req.headers['user-agent']);
