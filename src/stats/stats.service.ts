@@ -38,10 +38,10 @@ export class StatsService {
 
   log(eventType: string, value: string) {
     if (value) {
-      this.stats.create({
-        eventType,
-        value,
-      });
+      // this.stats.create({
+      //   eventType,
+      //   value,
+      // });
     }
   }
 
